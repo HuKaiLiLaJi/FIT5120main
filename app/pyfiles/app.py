@@ -2,11 +2,13 @@ from flask import Flask, render_template, request, jsonify
 from datetime import datetime, timedelta
 from models import db, Event
 import calendar
+from openai import OpenAI
 
 app = Flask(__name__,template_folder='../templates',static_folder='../static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calendar.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
+client = OpenAI(api_key="", base_url="https://api.deepseek.com")
 
 @app.before_request
 def create_tables():
@@ -47,6 +49,24 @@ def add_event():
     db.session.add(event)
     db.session.commit()
     return jsonify({'status': 'success'})
+
+
+@app.route('/recommendation',methods=['POST'])
+def get_recommendation():
+    data=request.get_json()
+    input_text=data.get('input')
+    response=client.chat.completions.create(
+        model='deepseek-chat',
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant"},
+            {"role": "user", "content": '讲讲'+input_text},
+        ],
+        stream=False
+    )
+    result=response.choices[0].message.content
+    return jsonify({'message': result})
+    
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
