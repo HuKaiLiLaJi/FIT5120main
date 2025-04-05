@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Epic Buttons</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 15px 30px;
+      margin: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Select an Epic</h1>
+
+  <button id='epic1'>epic1</button>
+  <button id='epic2'>epic2</button>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+
+</body>
+</html>

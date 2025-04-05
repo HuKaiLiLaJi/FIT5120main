@@ -20,6 +20,13 @@ def get_week_dates(base_date=None):
 
 @app.route('/')
 def index():
+    return render_template('index.html')
+
+@app.route('/epic1')
+def epic1():
+    return '<h2>This is Epic 1 page</h2>'
+@app.route('/epic2')
+def epic2():
     week_dates = get_week_dates()
     events = Event.query.filter(Event.date.in_(week_dates)).all()
     events_by_day = {d: [] for d in week_dates}
