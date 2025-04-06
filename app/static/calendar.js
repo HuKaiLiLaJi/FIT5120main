@@ -47,4 +47,45 @@ function openAddModal(date) {
       outputBox.textContent = 'Cannot be empty';  
     }
   });
+
+  document.getElementById('analyzeBtn').addEventListener('click', async function() {
+    const day = document.getElementById('daySelect').value;
+    const resultDiv = document.getElementById('analysisResult');
+    
+    if (!day) {
+      resultDiv.innerHTML = '<div class="alert alert-warning">Please select a day</div>';
+      return;
+    }
   
+    try {
+      resultDiv.innerHTML = '<div class="spinner-border"></div> Analyzing...';
+      
+      
+      const eventsRes = await fetch(`/epic2/events-by-day?day=${encodeURIComponent(day)}`);
+      const events = await eventsRes.json();
+      
+      
+      const analysisRes = await fetch('/analyze-with-deepseek', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          day,
+          events
+        })
+      });
+      
+      const result = await analysisRes.json();
+      
+      resultDiv.innerHTML = `
+        <div class="alert alert-info">
+          <h5>${day} Analysis</h5>
+          <p>${result.analysis}</p>
+          ${result.suggestion ? `<hr><p><strong>Suggestion:</strong> ${result.suggestion}</p>` : ''}
+        </div>
+      `;
+      
+    } catch (error) {
+      resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+    }
+  });
+
