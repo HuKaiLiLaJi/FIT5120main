@@ -79,7 +79,7 @@ function openAddModal(date) {
       resultDiv.innerHTML = `
         <div class="alert alert-info">
           <h5>${day} Analysis</h5>
-          <p>${result.analysis}</p>
+          <p>${result.message}</p>
           ${result.suggestion ? `<hr><p><strong>Suggestion:</strong> ${result.suggestion}</p>` : ''}
         </div>
       `;

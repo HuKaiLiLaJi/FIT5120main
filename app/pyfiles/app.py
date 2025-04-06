@@ -9,7 +9,7 @@ app = Flask(__name__,template_folder='../templates',static_folder='../static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calendar.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-client = OpenAI(api_key="", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="sk-02e20ead4b434e64b235311055365479", base_url="https://api.deepseek.com")
 
 @app.before_request
 def create_tables():
