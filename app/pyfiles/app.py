@@ -9,7 +9,7 @@ app = Flask(__name__,template_folder='../templates',static_folder='../static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calendar.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-client = OpenAI(api_key="sk-02e20ead4b434e64b235311055365479", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="", base_url="https://api.deepseek.com")
 
 @app.before_request
 def create_tables():
@@ -137,6 +137,31 @@ def analyze_with_deepseek():
     
     analysis_result = response.choices[0].message.content
     return jsonify({'message': analysis_result})
+
+
+@app.route('/get-age-recommendation',methods=['POST'])
+def get_age_recommendation():
+    data = request.get_json()
+    age = data.get('age')
+    if age is None:
+        return jsonify({'recommendation': 'No age provided'}), 400
+    response=client.chat.completions.create(
+        model='deepseek-chat',
+        messages=[
+            {
+                'role':'system',
+                'content':'你是一个健康生活助手，请分析用户的事件安排并给出健康建议'
+            },
+            {
+                'role':'user',
+                'content':f"""请给出年龄为{age}的儿童的每日屏幕（包括手机电脑）使用时长的建议，要求用英语回答"""
+            }
+        ],
+        stream=False
+    )
+    analysis_result = response.choices[0].message.content
+    return jsonify({'recommendation': analysis_result})
+
 
 
 if __name__ == '__main__':

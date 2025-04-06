@@ -2,22 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>child every day screen time</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 40px;
-      background-color: #f9f9f9;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .tableauContainer {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-  </style>
+  <title>epic1</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='epic1.css') }}">
 </head>
 <body>
   <h1>child every day screen time</h1>
@@ -51,5 +37,70 @@
   </div>
 
   <script src="{{ url_for('static', filename='epic1.js') }}"></script>
+
+  <h1>Recommended Screen Time for Children Aged 5–15</h1>
+
+  <section>
+    <h2>📱 Children Aged 5–7</h2>
+    <p><strong>Recommended time:</strong> No more than 1 hour per day (for recreational screen use)</p>
+    <ul>
+      <li><strong>Main sources:</strong> WHO, Australian Health Guidelines</li>
+      <li>Children in this age group are in a critical development stage—excess screen time may hinder language and social skill development.</li>
+      <li>Too much sedentary time can affect physical growth.</li>
+      <li>Excessive screen exposure may also disrupt sleep patterns.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📱 Children Aged 8–10</h2>
+    <p><strong>Recommended time:</strong> No more than 1.5 hours per day (for recreational screen use)</p>
+    <ul>
+      <li>Guidelines are becoming more flexible as educational screen use increases.</li>
+      <li><strong>Key priorities:</strong> Daily physical activity (≥60 minutes), sufficient sleep (9–11 hours), and face-to-face interaction.</li>
+      <li>Important to avoid forming habits of excessive passive screen use.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>📱 Children Aged 11–15</h2>
+    <p><strong>Recommended time:</strong> No more than 2 hours per day (for recreational screen use)</p>
+    <ul>
+      <li>Screen use for learning or social interaction may be more common but should be balanced.</li>
+      <li><strong>Key balance factors:</strong> Sleep (8–10 hours), daily exercise, and social interaction.</li>
+      <li>Exceeding 3 hours per day is associated with increased risks of obesity, anxiety, poor concentration, and disrupted sleep.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>💡 General Healthy Screen Use Tips</h2>
+    <ul>
+      <li>Create a <strong>family screen time plan</strong> to set consistent boundaries.</li>
+      <li>Avoid screen use at least 1 hour before bedtime.</li>
+      <li>Encourage good posture and frequent breaks to reduce eye strain.</li>
+      <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
+    </ul>
+  </section>
+  <section class="age-input">
+    <h2>🎯 Enter Age to Get a Specific Recommendation</h2>
+    <label for="age">Select Age:</label>
+    <select id="age">
+      <!-- 5 to 15 options -->
+      <script>
+        for (let i = 5; i <= 15; i++) {
+          document.write(`<option value="${i}">${i} years old</option>`);
+        }
+      </script>
+    </select>
+    <br>
+    <button onclick="submitAge()" class="btn btn-secondary">Get Recommendation</button>
+
+    <div id="recommendation"></div>
+  </section>
+
+
+
+
+
+
 </body>
 </html>

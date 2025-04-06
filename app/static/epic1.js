@@ -8,4 +8,24 @@ document.addEventListener("DOMContentLoaded", function () {
     scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
     vizElement.parentNode.insertBefore(scriptElement, vizElement);
   });
+
+
+  function submitAge() {
+    const age = document.getElementById('age').value;
+    fetch('/get-age-recommendation', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ age: parseInt(age) })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('recommendation').innerHTML = data.recommendation;
+    })
+    .catch(error => {
+      document.getElementById('recommendation').innerHTML = 'Error getting recommendation.';
+      console.error('Error:', error);
+    });
+  }
   
