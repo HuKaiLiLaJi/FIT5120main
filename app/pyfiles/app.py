@@ -26,7 +26,7 @@ def index():
 
 @app.route('/epic1')
 def epic1():
-    return '<h2>This is Epic 1 page</h2>'
+    return render_template('epic1.html')
 @app.route('/epic2')
 def epic2():
     week_dates = get_week_dates()

@@ -8,9 +8,9 @@
 </head>
 <body class="p-4">
   <div class="mb-4">
-    <label for="inputText" class="form-label">输入内容：</label>
-    <input type="text" id="inputText" class="form-control mb-2" placeholder="请输入一些内容">
-    <button id="submitButton" class="btn btn-primary">提交</button>
+    <label for="inputText" class="form-label">input content：</label>
+    <input type="text" id="inputText" class="form-control mb-2" placeholder="plz input something">
+    <button id="submitButton" class="btn btn-primary">input</button>
     <div id="outputBox" class="mt-2 p-2 border bg-light"></div>
   </div>
   <h1 class="mb-4">Weekly Calendar</h1>
@@ -28,35 +28,35 @@
             </li>
           {% endfor %}
         </ul>
-        <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">添加事件</button>
+        <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">add something</button>
       </div>
     {% endfor %}
   </div>
 
-  <!-- 添加事件 Modal -->
+ 
   <div class="modal" id="eventModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content p-3">
-        <h5>添加事件</h5>
+        <h5>add thing</h5>
         <form id="eventForm">
           <input type="hidden" name="date" id="eventDate">
           <div class="mb-2">
-            <label>标题：</label>
+            <label>title：</label>
             <input type="text" class="form-control" name="title" required>
           </div>
           <div class="mb-2">
-            <label>描述：</label>
+            <label>description：</label>
             <textarea class="form-control" name="description"></textarea>
           </div>
           <div class="mb-2">
-            <label>开始时间：</label>
+            <label>begin：</label>
             <input type="time" class="form-control" name="start_time" required>
           </div>
           <div class="mb-2">
-            <label>结束时间：</label>
+            <label>end：</label>
             <input type="time" class="form-control" name="end_time" required>
           </div>
-          <button type="submit" class="btn btn-success">提交</button>
+          <button type="submit" class="btn btn-success">submit</button>
         </form>
       </div>
     </div>
