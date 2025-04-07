@@ -1,38 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Epic Buttons</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      margin-top: 100px;
-    }
-    button {
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      background-color: #4CAF50;
-      color: white;
-      transition: background-color 0.3s ease;
-    }
-    button:hover {
-      background-color: #45a049;
-    }
-  </style>
-</head>
-<body>
+<!-- templates/index.html -->
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
-  <h1>Select an Epic</h1>
+{% block content %}
+<div class="d-flex flex-column justify-content-center align-items-center text-center mt-5">
+  <h1>SafeStream Guardian</h1>
+  <p class="lead mt-3">
+    Our vision is to empower parents with safe and balanced digital tools 
+    that help create a nurturing online and offline experience for your child.
+  </p>
 
-  <button id='epic1'>epic1</button>
-  <button id='epic2'>epic2</button>
+  <div class="mt-4">
+    <button id="epic1"
+            class="btn btn-primary mx-2"
+            onclick="window.location.href='{{ url_for('epic1') }}'">
+      Education Hub
+    </button>
+    <button id="epic2"
+            class="btn btn-secondary mx-2"
+            onclick="window.location.href='{{ url_for('epic2') }}'">
+      Digital Life Planner
+    </button>
+  </div>
+</div>
+{% endblock %}
 
+{% block extra_scripts %}
   <script src="{{ url_for('static', filename='index.js') }}"></script>
-
-</body>
-</html>
+{% endblock %}

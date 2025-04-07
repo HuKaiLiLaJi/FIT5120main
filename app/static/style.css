@@ -1,8 +1,83 @@
-/* 可选的样式美化 */
+/* static/style.css */
+
+/* Define our new, grounding color palette */
+:root {
+  --primary-color: #c99383;    /* Clay – used for primary elements */
+  --secondary-color: #b17a50;   /* Wood – used for secondary elements */
+  --primary-hover: #b37c6f;     /* Darker shade for hover states */
+  --secondary-hover: #9f6643;   /* Darker shade for hover states */
+  --background-color: #fff8f0;  /* Buttercream – a warm neutral background */
+  --text-color: #333333;        /* Dark text for readability */
+}
+
+/* Background and body setup */
 body {
-    background-color: #f9f9f9;
-  }
-  .col {
-    min-height: 200px;
-  }
-  
+  background: var(--background-color) url('/static/assets/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--text-color);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 248, 240, 0.3);
+  z-index: -1;
+}
+
+/* Content container styling */
+.container {
+  background-color: rgba(255, 248, 240, 0.85);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* Custom navbar styles: coloured and rounded edges */
+.custom-navbar {
+  background-color: var(--primary-color);
+  border-radius: 10px;
+  margin: 10px;
+  padding: 0.5rem 1rem;
+}
+
+/* Override Bootstrap's button styles with our palette */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background-color: var(--secondary-hover);
+  border-color: var(--secondary-hover);
+}
+
+/* Hover effect on all buttons */
+.btn:hover {
+  transform: scale(1.05);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Tooltip styling to match our palette */
+.tooltip-inner {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  border: 1px solid var(--text-color);
+}

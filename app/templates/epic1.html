@@ -1,44 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>epic1</title>
+<!-- templates/epic1.html -->
+{% extends "base.html" %}
+{% block title %}epic1{% endblock %}
+
+{% block extra_styles %}
+  <!-- Additional CSS specific to epic1 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='epic1.css') }}">
-</head>
-<body>
-  <h1>child every day screen time</h1>
+{% endblock %}
 
-  <div class="tableauContainer">
-    <div class='tableauPlaceholder' id='viz1743726352987' style='position: relative'>
-      <noscript>
-        <a href='#'>
-          <img alt='Average Daily Screen Time of Children'
-               src='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1_rss.png'
-               style='border: none' />
-        </a>
-      </noscript>
-      <object class='tableauViz' style='display:none;'>
-        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
-        <param name='embed_code_version' value='3' />
-        <param name='site_root' value='' />
-        <param name='name' value='Book1_17435888072440/Sheet1' />
-        <param name='tabs' value='no' />
-        <param name='toolbar' value='yes' />
-        <param name='static_image' value='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1.png' />
-        <param name='animate_transition' value='yes' />
-        <param name='display_static_image' value='yes' />
-        <param name='display_spinner' value='yes' />
-        <param name='display_overlay' value='yes' />
-        <param name='display_count' value='yes' />
-        <param name='language' value='en-US' />
-        <param name='filter' value='publish=yes' />
-      </object>
-    </div>
-  </div>
-
+{% block content %}
   <script src="{{ url_for('static', filename='epic1.js') }}"></script>
 
-  <h1>Recommended Screen Time for Children Aged 5–15</h1>
+  <h1>Ho many hours of screentime should your child get?</h1>
 
   <section>
     <h2>📱 Children Aged 5–7</h2>
@@ -80,11 +52,41 @@
       <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
     </ul>
   </section>
+
+  <h1>Kids' average everyday screen time</h1>
+  <div class="tableauContainer">
+    <div class='tableauPlaceholder' id='viz1743726352987' style='position: relative'>
+      <noscript>
+        <a href='#'>
+          <img alt='Average Daily Screen Time of Children'
+               src='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1_rss.png'
+               style='border: none' />
+        </a>
+      </noscript>
+      <object class='tableauViz' style='display:none;'>
+        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+        <param name='embed_code_version' value='3' />
+        <param name='site_root' value='' />
+        <param name='name' value='Book1_17435888072440/Sheet1' />
+        <param name='tabs' value='no' />
+        <param name='toolbar' value='yes' />
+        <param name='static_image' value='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1.png' />
+        <param name='animate_transition' value='yes' />
+        <param name='display_static_image' value='yes' />
+        <param name='display_spinner' value='yes' />
+        <param name='display_overlay' value='yes' />
+        <param name='display_count' value='yes' />
+        <param name='language' value='en-US' />
+        <param name='filter' value='publish=yes' />
+      </object>
+    </div>
+  </div>
+
   <section class="age-input">
     <h2>🎯 Enter Age to Get a Specific Recommendation</h2>
     <label for="age">Select Age:</label>
     <select id="age">
-      <!-- 5 to 15 options -->
+      <!-- Age options via JS -->
       <script>
         for (let i = 5; i <= 15; i++) {
           document.write(`<option value="${i}">${i} years old</option>`);
@@ -96,11 +98,7 @@
 
     <div id="recommendation"></div>
   </section>
-
-
-
-
-
-
-</body>
-</html>
+{% endblock %}
+{% block extra_scripts %}
+  <script src="{{ url_for('static', filename='epic1.js') }}"></script>
+{% endblock %}
