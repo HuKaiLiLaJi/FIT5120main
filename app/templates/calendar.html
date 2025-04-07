@@ -3,13 +3,15 @@
 {% block title %}Weekly Calendar{% endblock %}
 
 {% block content %}
+  <!-- Interest suggestion section -->
   <div class="mb-4">
-    <label for="inputText" class="form-label">input content：</label>
-    <input type="text" id="inputText" class="form-control mb-2" placeholder="plz input something">
-    <button id="submitButton" class="btn btn-primary">input</button>
+    <label for="inputText" class="form-label">Type in an area of interest or an activity：</label>
+    <input type="text" id="inputText" class="form-control mb-2" placeholder="Allow up to 30s for response">
+    <button id="submitButton" class="btn btn-primary">See suggestions</button>
     <div id="outputBox" class="mt-2 p-2 border bg-light"></div>
   </div>
 
+  <!-- Calendar display -->
   <h1 class="mb-4">Weekly Calendar</h1>
   <div class="row">
     {% for day in week_dates %}
@@ -32,7 +34,7 @@
     {% endfor %}
   </div>
 
-  <!-- Modal -->
+  <!-- Event adding modal -->
   <div class="modal" id="eventModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content p-3">
@@ -61,6 +63,7 @@
     </div>
   </div>
 
+  <!-- Analysis controls -->
   <div class="mt-5 d-flex align-items-center">
     <label for="daySelect" class="me-2">Select one day：</label>
     <select id="daySelect" class="form-select w-auto me-3">
@@ -72,8 +75,9 @@
       <option value="Saturday">Saturday</option>
       <option value="Sunday">Sunday</option>
     </select>
-    <button id='analyzeBtn' class="btn btn-secondary">Confirm</button>
+    <button id="analyzeBtn" class="btn btn-secondary">Confirm</button>
   </div>
+  <!-- This div will display the GPT output rendered from Markdown using Marked -->
   <div id="analysisResult" class="mt-3"></div>
 {% endblock %}
 

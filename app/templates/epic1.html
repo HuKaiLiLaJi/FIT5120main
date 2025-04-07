@@ -5,100 +5,121 @@
 {% block extra_styles %}
   <!-- Additional CSS specific to epic1 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='epic1.css') }}">
+  <style>
+    /* Optional inline styles to visually separate the two blocks */
+    .general-tips, .age-specific-tips {
+      margin-bottom: 2rem;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background-color: #fff;
+    }
+    .age-specific-tips {
+      background-color: #f9f9f9;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
+  <!-- Load epic1.js at the top (or you may want to move it to extra_scripts) -->
   <script src="{{ url_for('static', filename='epic1.js') }}"></script>
 
-  <h1>Ho many hours of screentime should your child get?</h1>
+  <h1>How many hours of screentime should your child get?</h1>
+  
+  <!-- GENERAL TIPS BLOCK -->
+  <div class="general-tips">
+    <section>
+      <h2>📱 Children Aged 5–7</h2>
+      <p><strong>Recommended time:</strong> No more than 1 hour per day (for recreational screen use)</p>
+      <ul>
+        <li><strong>Main sources:</strong> WHO, Australian Health Guidelines</li>
+        <li>Children in this age group are in a critical development stage—excess screen time may hinder language and social skill development.</li>
+        <li>Too much sedentary time can affect physical growth.</li>
+        <li>Excessive screen exposure may also disrupt sleep patterns.</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>📱 Children Aged 5–7</h2>
-    <p><strong>Recommended time:</strong> No more than 1 hour per day (for recreational screen use)</p>
-    <ul>
-      <li><strong>Main sources:</strong> WHO, Australian Health Guidelines</li>
-      <li>Children in this age group are in a critical development stage—excess screen time may hinder language and social skill development.</li>
-      <li>Too much sedentary time can affect physical growth.</li>
-      <li>Excessive screen exposure may also disrupt sleep patterns.</li>
-    </ul>
-  </section>
+    <section>
+      <h2>📱 Children Aged 8–10</h2>
+      <p><strong>Recommended time:</strong> No more than 1.5 hours per day (for recreational screen use)</p>
+      <ul>
+        <li>Guidelines are becoming more flexible as educational screen use increases.</li>
+        <li><strong>Key priorities:</strong> Daily physical activity (≥60 minutes), sufficient sleep (9–11 hours), and face-to-face interaction.</li>
+        <li>Important to avoid forming habits of excessive passive screen use.</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>📱 Children Aged 8–10</h2>
-    <p><strong>Recommended time:</strong> No more than 1.5 hours per day (for recreational screen use)</p>
-    <ul>
-      <li>Guidelines are becoming more flexible as educational screen use increases.</li>
-      <li><strong>Key priorities:</strong> Daily physical activity (≥60 minutes), sufficient sleep (9–11 hours), and face-to-face interaction.</li>
-      <li>Important to avoid forming habits of excessive passive screen use.</li>
-    </ul>
-  </section>
+    <section>
+      <h2>📱 Children Aged 11–15</h2>
+      <p><strong>Recommended time:</strong> No more than 2 hours per day (for recreational screen use)</p>
+      <ul>
+        <li>Screen use for learning or social interaction may be more common but should be balanced.</li>
+        <li><strong>Key balance factors:</strong> Sleep (8–10 hours), daily exercise, and social interaction.</li>
+        <li>Exceeding 3 hours per day is associated with increased risks of obesity, anxiety, poor concentration, and disrupted sleep.</li>
+      </ul>
+    </section>
 
-  <section>
-    <h2>📱 Children Aged 11–15</h2>
-    <p><strong>Recommended time:</strong> No more than 2 hours per day (for recreational screen use)</p>
-    <ul>
-      <li>Screen use for learning or social interaction may be more common but should be balanced.</li>
-      <li><strong>Key balance factors:</strong> Sleep (8–10 hours), daily exercise, and social interaction.</li>
-      <li>Exceeding 3 hours per day is associated with increased risks of obesity, anxiety, poor concentration, and disrupted sleep.</li>
-    </ul>
-  </section>
+    <section>
+      <h2>💡 General Healthy Screen Use Tips</h2>
+      <ul>
+        <li>Create a <strong>family screen time plan</strong> to set consistent boundaries.</li>
+        <li>Avoid screen use at least 1 hour before bedtime.</li>
+        <li>Encourage good posture and frequent breaks to reduce eye strain.</li>
+        <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
+      </ul>
+    </section>
+  </div>
+  
+  <!-- AGE-SPECIFIC TIPS BLOCK -->
+  <div class="age-specific-tips">
+    <section class="age-input text-center">
+      <h2>🎯 Get age-specific screentime tips:</h2>
+      <label for="age" class="d-block mb-2">Select Age:</label>
+      <select id="age" class="form-select w-auto d-inline-block">
+        <!-- Age options via JS -->
+        <script>
+          for (let i = 5; i <= 15; i++) {
+            document.write(`<option value="${i}">${i} years old</option>`);
+          }
+        </script>
+      </select>
+      <br>
+      <button onclick="submitAge()" class="btn btn-secondary mt-2">Get Tips</button>
+      <div id="recommendation" class="mt-3"></div>
+    </section>
+  </div>
 
-  <section>
-    <h2>💡 General Healthy Screen Use Tips</h2>
-    <ul>
-      <li>Create a <strong>family screen time plan</strong> to set consistent boundaries.</li>
-      <li>Avoid screen use at least 1 hour before bedtime.</li>
-      <li>Encourage good posture and frequent breaks to reduce eye strain.</li>
-      <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
-    </ul>
-  </section>
-
-  <h1>Kids' average everyday screen time</h1>
+  
+  <h1>Kids' Average Everyday Screen Time</h1>
   <div class="tableauContainer">
-    <div class='tableauPlaceholder' id='viz1743726352987' style='position: relative'>
+    <div class="tableauPlaceholder" id="viz1743726352987" style="position: relative">
       <noscript>
-        <a href='#'>
-          <img alt='Average Daily Screen Time of Children'
-               src='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1_rss.png'
-               style='border: none' />
+        <a href="#">
+          <img alt="Average Daily Screen Time of Children"
+               src="https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1_rss.png"
+               style="border: none" />
         </a>
       </noscript>
-      <object class='tableauViz' style='display:none;'>
-        <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
-        <param name='embed_code_version' value='3' />
-        <param name='site_root' value='' />
-        <param name='name' value='Book1_17435888072440/Sheet1' />
-        <param name='tabs' value='no' />
-        <param name='toolbar' value='yes' />
-        <param name='static_image' value='https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1.png' />
-        <param name='animate_transition' value='yes' />
-        <param name='display_static_image' value='yes' />
-        <param name='display_spinner' value='yes' />
-        <param name='display_overlay' value='yes' />
-        <param name='display_count' value='yes' />
-        <param name='language' value='en-US' />
-        <param name='filter' value='publish=yes' />
+      <object class="tableauViz" style="display:none;">
+        <param name="host_url" value="https%3A%2F%2Fpublic.tableau.com%2F" />
+        <param name="embed_code_version" value="3" />
+        <param name="site_root" value="" />
+        <param name="name" value="Book1_17435888072440/Sheet1" />
+        <param name="tabs" value="no" />
+        <param name="toolbar" value="yes" />
+        <param name="static_image" value="https://public.tableau.com/static/images/Bo/Book1_17435888072440/Sheet1/1.png" />
+        <param name="animate_transition" value="yes" />
+        <param name="display_static_image" value="yes" />
+        <param name="display_spinner" value="yes" />
+        <param name="display_overlay" value="yes" />
+        <param name="display_count" value="yes" />
+        <param name="language" value="en-US" />
+        <param name="filter" value="publish=yes" />
       </object>
     </div>
   </div>
-
-  <section class="age-input">
-    <h2>🎯 Enter Age to Get a Specific Recommendation</h2>
-    <label for="age">Select Age:</label>
-    <select id="age">
-      <!-- Age options via JS -->
-      <script>
-        for (let i = 5; i <= 15; i++) {
-          document.write(`<option value="${i}">${i} years old</option>`);
-        }
-      </script>
-    </select>
-    <br>
-    <button onclick="submitAge()" class="btn btn-secondary">Get Recommendation</button>
-
-    <div id="recommendation"></div>
-  </section>
 {% endblock %}
+
 {% block extra_scripts %}
   <script src="{{ url_for('static', filename='epic1.js') }}"></script>
 {% endblock %}

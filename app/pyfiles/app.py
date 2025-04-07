@@ -9,7 +9,7 @@ app = Flask(__name__,template_folder='../templates',static_folder='../static')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calendar.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
-client = OpenAI(api_key="", base_url="https://api.deepseek.com")
+client = OpenAI(api_key="sk-02e20ead4b434e64b235311055365479", base_url="https://api.deepseek.com")
 
 @app.before_request
 def create_tables():
@@ -59,8 +59,8 @@ def get_recommendation():
     response=client.chat.completions.create(
         model='deepseek-chat',
         messages=[
-            {"role": "system", "content": "You are a helpful assistant"},
-            {"role": "user", "content": '讲讲'+input_text},
+            {"role": "system", "content": "You are Children digital life specialist"},
+            {"role": "user", "content": 'Talk about how doing the following activity helps balance childrends digital life, if the following is not an activity but an area of interest suggest online/outdoor activites that are related to that activity'+input_text},
         ],
         stream=False
     )
@@ -117,18 +117,18 @@ def analyze_with_deepseek():
         messages=[
             {
                 "role": "system", 
-                "content": "你是一个健康生活助手，请分析用户的事件安排并给出健康建议"
+                "content": "You are Children digital life specialist"
             },
             {
                 "role": "user", 
-                "content": f"""请分析以下{day}的事件安排是否合理：
+                "content": f"""Please analyse if the activities on day {day} is optimal：
                 {json.dumps(events_data, indent=2, ensure_ascii=False)}
                 
-                要求：
-                1. 健康评分（1-5分）
-                2. 主要问题
-                3. 改进建议
-                请用英语回答"""
+                Requirements：
+                1. Health rating:（1-5）
+                2. Main problem
+                3. Recommendations for improvements:
+                """
             }
         ],
         stream=False
@@ -150,11 +150,11 @@ def get_age_recommendation():
         messages=[
             {
                 'role':'system',
-                'content':'你是一个健康生活助手，请分析用户的事件安排并给出健康建议'
+                'content':'You are Children digital life specialist'
             },
             {
                 'role':'user',
-                'content':f"""请给出年龄为{age}的儿童的每日屏幕（包括手机电脑）使用时长的建议，要求用英语回答"""
+                'content':f"""Please give suggestions for children aged:{age} everyday screentime"""
             }
         ],
         stream=False
