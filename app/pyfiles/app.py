@@ -163,6 +163,5 @@ def get_age_recommendation():
     return jsonify({'recommendation': analysis_result})
 
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
+if __name__ == "main":
+    app.run(host='0.0.0.0', port=5000, debug=True)
