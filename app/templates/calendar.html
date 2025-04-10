@@ -48,11 +48,12 @@
           {% endfor %}
         </ul>
         <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">
-          add something
+          Add something
         </button>
-        <div class="description-block">
-          This calendar shows your weekly schedule. Each day lists all events that have been added. Click "add something" to open a modal and add a new event to that day.
-        </div>
+        <button class="btn btn-sm btn-danger" onclick="deleteEventsForDate(this)" data-date="{{ day }}">
+          Delete
+        </button>
+        
       </div>
     {% endfor %}
   </div>

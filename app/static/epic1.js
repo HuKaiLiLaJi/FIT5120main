@@ -1,3 +1,4 @@
+// Import the tableau diagram
 document.addEventListener("DOMContentLoaded", function () {
   var divElement = document.getElementById('viz1743726352987');
   var vizElement = divElement.getElementsByTagName('object')[0];

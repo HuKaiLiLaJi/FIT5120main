@@ -1,13 +1,17 @@
+// Open the modal dialog to add a new event for the selected date
 function openAddModal(date) {
   document.getElementById('eventDate').value = date;
+  // Initialize and show the Bootstrap modal
   const modal = new bootstrap.Modal(document.getElementById('eventModal'));
   modal.show();
 }
-
+// Add a submit event listener to the event form
 document.getElementById('eventForm').addEventListener('submit', async function(e) {
+  // Prevent the default form submission behavior (page reload)
   e.preventDefault();
   const formData = new FormData(this);
   const data = Object.fromEntries(formData.entries());
+  // Send a POST request
 
   const res = await fetch('/add', {
     method: 'POST',
@@ -19,7 +23,7 @@ document.getElementById('eventForm').addEventListener('submit', async function(e
     window.location.reload();
   }
 });
-
+//Test function, not in use
 document.getElementById('submitButton').addEventListener('click', async function() {
   const inputText = document.getElementById('inputText').value;
   const outputBox = document.getElementById('outputBox');
@@ -46,22 +50,23 @@ document.getElementById('submitButton').addEventListener('click', async function
     outputBox.textContent = 'Cannot be empty';
   }
 });
-
+// Add an event listener to the "Analyze" button to trigger the analysis when clicked
 document.getElementById('analyzeBtn').addEventListener('click', async function() {
   const day = document.getElementById('daySelect').value;
   const resultDiv = document.getElementById('analysisResult');
-
+// If no day is selected, show a warning message
   if (!day) {
     resultDiv.innerHTML = '<div class="alert alert-warning">Please select a day</div>';
     return;
   }
 
   try {
+    // Show a loading spinner
     resultDiv.innerHTML = '<div class="spinner-border"></div> Analyzing...';
 
     const eventsRes = await fetch(`/epic2/events-by-day?day=${encodeURIComponent(day)}`);
     const events = await eventsRes.json();
-
+// Send the selected day and events data to the server
     const analysisRes = await fetch('/analyze-with-deepseek', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -89,3 +94,32 @@ document.getElementById('analyzeBtn').addEventListener('click', async function()
     resultDiv.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
   }
 });
+
+
+function deleteEventsForDate(button) {
+  const date = button.getAttribute('data-date');
+
+  if (!confirm(`Are you sure you want to delete all events for ${date}?`)) return;
+
+  fetch('/epic2/delete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ date: date })
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'deleted') {
+      alert('Events deleted successfully.');
+      location.reload(); // refresh the page
+    } else {
+      alert('Something went wrong.');
+    }
+  });
+}
+
+
+
+
+
