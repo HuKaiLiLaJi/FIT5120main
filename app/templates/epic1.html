@@ -6,7 +6,16 @@
   <!-- Additional CSS specific to epic1 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='epic1.css') }}">
   <style>
-    /* Optional inline styles to visually separate the two blocks */
+    /* Inline styles for description blocks */
+    .description-block {
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background-color: #e9ecef;
+      border-left: 4px solid #c99383;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      color: #333;
+    }
     .general-tips, .age-specific-tips {
       margin-bottom: 2rem;
       padding: 1rem;
@@ -17,58 +26,88 @@
     .age-specific-tips {
       background-color: #f9f9f9;
     }
+    .visualisation-description {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #f8f8f8;
+      border-radius: 8px;
+      font-style: italic;
+    }
+    /* Centering age-specific input elements */
+    .age-input.text-center label,
+    .age-input.text-center select,
+    .age-input.text-center button {
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .age-input.text-center select {
+      width: auto;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
-  <!-- Load epic1.js at the top (or you may want to move it to extra_scripts) -->
   <script src="{{ url_for('static', filename='epic1.js') }}"></script>
 
   <h1>How many hours of screentime should your child get?</h1>
   
-  <!-- GENERAL TIPS BLOCK -->
-  <div class="general-tips">
-    <section>
-      <h2>📱 Children Aged 5–7</h2>
-      <p><strong>Recommended time:</strong> No more than 1 hour per day (for recreational screen use)</p>
-      <ul>
-        <li><strong>Main sources:</strong> WHO, Australian Health Guidelines</li>
-        <li>Children in this age group are in a critical development stage—excess screen time may hinder language and social skill development.</li>
-        <li>Too much sedentary time can affect physical growth.</li>
-        <li>Excessive screen exposure may also disrupt sleep patterns.</li>
-      </ul>
-    </section>
+  <!-- Section: Children Aged 5–7 -->
+  <section>
+    <h2>📱 Children Aged 5–7</h2>
+    <p><strong>Recommended time:</strong> No more than 1 hour per day (for recreational screen use)</p>
+    <ul>
+      <li><strong>Main sources:</strong> WHO, Australian Health Guidelines</li>
+      <li>Children in this age group are in a critical development stage—excess screen time may hinder language and social skill development.</li>
+      <li>Too much sedentary time can affect physical growth.</li>
+      <li>Excessive screen exposure may also disrupt sleep patterns.</li>
+    </ul>
+    <div class="description-block">
+      This section provides guidelines for children aged 5–7. Use it as a reference to understand that young kids should have no more than one hour of recreational screen time daily, as supported by reputable sources.
+    </div>
+  </section>
 
-    <section>
-      <h2>📱 Children Aged 8–10</h2>
-      <p><strong>Recommended time:</strong> No more than 1.5 hours per day (for recreational screen use)</p>
-      <ul>
-        <li>Guidelines are becoming more flexible as educational screen use increases.</li>
-        <li><strong>Key priorities:</strong> Daily physical activity (≥60 minutes), sufficient sleep (9–11 hours), and face-to-face interaction.</li>
-        <li>Important to avoid forming habits of excessive passive screen use.</li>
-      </ul>
-    </section>
+  <!-- Section: Children Aged 8–10 -->
+  <section>
+    <h2>📱 Children Aged 8–10</h2>
+    <p><strong>Recommended time:</strong> No more than 1.5 hours per day (for recreational screen use)</p>
+    <ul>
+      <li>Guidelines are becoming more flexible as educational screen use increases.</li>
+      <li><strong>Key priorities:</strong> Daily physical activity (≥60 minutes), sufficient sleep (9–11 hours), and face-to-face interaction.</li>
+      <li>Important to avoid forming habits of excessive passive screen use.</li>
+    </ul>
+    <div class="description-block">
+      This section provides recommendations for children aged 8–10. It highlights the balance needed between educational use of screens and the necessary physical and social activities.
+    </div>
+  </section>
 
-    <section>
-      <h2>📱 Children Aged 11–15</h2>
-      <p><strong>Recommended time:</strong> No more than 2 hours per day (for recreational screen use)</p>
-      <ul>
-        <li>Screen use for learning or social interaction may be more common but should be balanced.</li>
-        <li><strong>Key balance factors:</strong> Sleep (8–10 hours), daily exercise, and social interaction.</li>
-        <li>Exceeding 3 hours per day is associated with increased risks of obesity, anxiety, poor concentration, and disrupted sleep.</li>
-      </ul>
-    </section>
+  <!-- Section: Children Aged 11–15 -->
+  <section>
+    <h2>📱 Children Aged 11–15</h2>
+    <p><strong>Recommended time:</strong> No more than 2 hours per day (for recreational screen use)</p>
+    <ul>
+      <li>Screen use for learning or social interaction may be more common but should be balanced.</li>
+      <li><strong>Key balance factors:</strong> Sleep (8–10 hours), daily exercise, and social interaction.</li>
+      <li>Exceeding 3 hours per day is associated with increased risks of obesity, anxiety, poor concentration, and disrupted sleep.</li>
+    </ul>
+    <div class="description-block">
+      For older children (11–15), this section explains that while they may use screens for varied purposes, keeping recreational use under control is critical for overall health.
+    </div>
+  </section>
 
-    <section>
-      <h2>💡 General Healthy Screen Use Tips</h2>
-      <ul>
-        <li>Create a <strong>family screen time plan</strong> to set consistent boundaries.</li>
-        <li>Avoid screen use at least 1 hour before bedtime.</li>
-        <li>Encourage good posture and frequent breaks to reduce eye strain.</li>
-        <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
-      </ul>
-    </section>
-  </div>
+  <!-- Section: General Healthy Screen Use Tips -->
+  <section>
+    <h2>💡 General Healthy Screen Use Tips</h2>
+    <ul>
+      <li>Create a <strong>family screen time plan</strong> to set consistent boundaries.</li>
+      <li>Avoid screen use at least 1 hour before bedtime.</li>
+      <li>Encourage good posture and frequent breaks to reduce eye strain.</li>
+      <li><strong>Content quality matters more than duration</strong>—educational and creative content is better than passive entertainment.</li>
+    </ul>
+    <div class="description-block">
+      These tips help you build a healthy digital environment at home. Follow these guidelines to ensure your child’s screen time is both beneficial and limited.
+    </div>
+  </section>
   
   <!-- AGE-SPECIFIC TIPS BLOCK -->
   <div class="age-specific-tips">
@@ -84,12 +123,15 @@
         </script>
       </select>
       <br>
-      <button onclick="submitAge()" class="btn btn-secondary mt-2">Get Tips</button>
+      <button onclick="submitAge()" class="btn btn-secondary mt-2">Get Recommendation</button>
       <div id="recommendation" class="mt-3"></div>
+      <div class="description-block">
+        Use this interactive tool to receive personalized screen time recommendations. Select your child’s age and click the button to get customized advice, rendered with clear formatting.
+      </div>
     </section>
   </div>
-
   
+  <!-- Section: Kids' Average Everyday Screen Time Visualization -->
   <h1>Kids' Average Everyday Screen Time</h1>
   <div class="tableauContainer">
     <div class="tableauPlaceholder" id="viz1743726352987" style="position: relative">
@@ -116,6 +158,16 @@
         <param name="language" value="en-US" />
         <param name="filter" value="publish=yes" />
       </object>
+    </div>
+  </div>
+  
+  <!-- Visualization Description Block -->
+  <div class="visualisation-description">
+    <p>
+      Do you know? Hearing that your kids have the same amount of screen time doesn't mean it's good. From the chart, we can see that on average, children from age 5 to 15 have an excessive amount of screen time—more than the amount recommended by the Australian Institute of Family Studies, which is no more than 2 hours of sedentary recreational screen time per day.
+    </p>
+    <div class="description-block">
+      This visualization shows the average screen time of children. Review the chart to understand how current habits compare to the recommended limits, and use this data as a basis for adjusting your family’s screen time routines.
     </div>
   </div>
 {% endblock %}
