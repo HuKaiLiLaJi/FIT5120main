@@ -4,31 +4,42 @@
 
 {% block extra_styles %}
   <style>
-    /* Inline styles for description blocks */
-    .description-block {
-      margin-top: 0.5rem;
-      padding: 0.75rem;
+    /* Inline styles for the instructions block */
+    .instructions-block {
+      margin: 1.5rem 0;
+      padding: 1rem;
       background-color: #e9ecef;
       border-left: 4px solid #c99383;
       border-radius: 4px;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: #333;
     }
   </style>
 {% endblock %}
 
 {% block content %}
+  <!-- Instructions Block: Separate cell with usage guidelines -->
+  <div class="instructions-block">
+    <h2>How to Use the Weekly Calendar</h2>
+    <ul>
+      <li>
+        <strong>Interest Suggestions:</strong> Use the top section to type in an area of interest or an activity. Click "See suggestions" to get relevant ideas (allow up to 30 seconds for a response).
+      </li>
+      <li>
+        <strong>Viewing Your Schedule:</strong> Your weekly calendar below displays each day’s scheduled events. Click "add something" on any day to open the modal and add a new event.
+      </li>
+      <li>
+        <strong>Analysis & Feedback:</strong> Use the dropdown and "Get feedback" button to select a day and receive GPT-powered suggestions for balancing that day’s activities.
+      </li>
+    </ul>
+  </div>
+
   <!-- Interest suggestion section -->
   <div class="mb-4">
-    <label for="inputText" class="form-label">
-      Type in an area of interest or an activity：
-    </label>
+    <label for="inputText" class="form-label">Type in an area of interest or an activity：</label>
     <input type="text" id="inputText" class="form-control mb-2" placeholder="Allow up to 30s for response">
     <button id="submitButton" class="btn btn-primary">See suggestions</button>
     <div id="outputBox" class="mt-2 p-2 border bg-light"></div>
-    <div class="description-block">
-      This section lets you input an area of interest or an activity. When you click "See suggestions," the app will use GPT to generate relevant ideas or recommendations based on your input.
-    </div>
   </div>
 
   <!-- Calendar display -->
@@ -47,13 +58,7 @@
             </li>
           {% endfor %}
         </ul>
-        <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">
-          Add something
-        </button>
-        <button class="btn btn-sm btn-danger" onclick="deleteEventsForDate(this)" data-date="{{ day }}">
-          Delete
-        </button>
-        
+        <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">add something</button>
       </div>
     {% endfor %}
   </div>
@@ -83,9 +88,6 @@
           </div>
           <button type="submit" class="btn btn-success">submit</button>
         </form>
-        <div class="description-block">
-          Use this modal form to add a new event to the selected day. Enter the event title, description, start and end times, and submit the form to update your calendar.
-        </div>
       </div>
     </div>
   </div>
@@ -102,10 +104,7 @@
       <option value="Saturday">Saturday</option>
       <option value="Sunday">Sunday</option>
     </select>
-    <button id="analyzeBtn" class="btn btn-secondary">Get feedback</button>
-  </div>
-  <div class="description-block">
-    This section allows you to analyze a specific day’s events. Select a day from the dropdown and click "Get feedback" to receive GPT-generated suggestions or feedback on how to balance the day's activities.
+    <button id="analyzeBtn" class="btn btn-secondary">Get feedback on the day</button>
   </div>
 
   <!-- GPT output display -->
