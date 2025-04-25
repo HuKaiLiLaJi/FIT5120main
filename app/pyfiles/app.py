@@ -4,10 +4,13 @@ from models import db, Event
 import calendar
 from openai import OpenAI
 import json
+import random
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql.expression import func
 
 app = Flask(__name__,template_folder='../templates',static_folder='../static') 
 # Create a virtual DB, gonna be replaced to real DB in the future
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///calendar.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 # Connect to the deepseek
@@ -178,6 +181,55 @@ def get_age_recommendation():
     )
     analysis_result = response.choices[0].message.content
     return jsonify({'recommendation': analysis_result})
+
+class CyberStory(db.Model):
+    __tablename__ = 'cyber_story'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100))
+    content = db.Column(db.String(999))
+    moral = db.Column(db.String(400))
+
+
+@app.route('/story')
+def story_page():
+    return render_template('story.html')
+
+@app.route('/api/stories')
+def get_stories():
+    page = int(request.args.get('page', 1))
+    per_page = 1
+    stories = CyberStory.query.paginate(page=page, per_page=per_page, error_out=False)
+    
+    data = [{
+        'id': s.id,
+        'title': s.title,
+        'content': s.content,
+        'moral': s.moral
+    } for s in stories.items]
+
+    return jsonify({
+        'stories': data,
+        'has_next': stories.has_next,
+        'has_prev': stories.has_prev,
+        'current_page': page
+    })
+@app.route('/api/stories/random')
+def get_random_story():
+    total = CyberStory.query.count()
+    offset = random.randint(0, total - 1)
+    story = CyberStory.query.offset(offset).limit(1).first()
+
+    
+    per_page = 1
+    page = (offset // per_page) + 1
+
+    return jsonify({
+        'id': story.id,
+        'title': story.title,
+        'content': story.content,
+        'moral': story.moral,
+        'page': page
+    })
 
 
 

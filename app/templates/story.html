@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cyber Story</title>
+  <script src="/static/story.js" defer></script>
+</head>
+<body>
+  <h1>Cyber Story Viewer</h1>
+
+  <div id="story-box">
+    <p id="page-number">Page: <span id="current-page">1</span></p>
+    <h2 id="story-title"></h2>
+    <p id="story-content"></p>
+    <p><strong>Moral:</strong> <span id="story-moral"></span></p>
+  </div>
+
+  <button id="prev-btn">Previous</button>
+  <button id="next-btn">Next</button>
+  <button id="random-btn">Random</button>
+
+  <script>
+    const apiBase = '/api/stories';
+  </script>
+</body>
+</html>
