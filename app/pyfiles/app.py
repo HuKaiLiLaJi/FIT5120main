@@ -7,8 +7,16 @@ import json
 import random
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql.expression import func
+import uuid
+from io import BytesIO
+import requests
 
 app = Flask(__name__,template_folder='../templates',static_folder='../static') 
+
+OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
+
+
+
 # Create a virtual DB, gonna be replaced to real DB in the future
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -231,7 +239,68 @@ def get_random_story():
         'page': page
     })
 
+def detect_image(file):
+    headers = {
+        "Authorization": f"Bearer {OPTIC_API_KEY}"
+    }
+    files = {
+        'image': (file.name, file, 'image/jpeg')
+    }
+    response = requests.post(OPTIC_ENDPOINT, headers=headers, files=files)
+    return response.json()
 
+
+@app.route('/detect/')
+def detect_page():
+    return render_template('detect.html')
+@app.route('/detect/api', methods=['POST'])
+def detect_api():
+    image_file = None
+
+    if 'file' in request.files:
+        file = request.files['file']
+        if file.filename != '':
+            image_file = file
+
+    if not image_file and 'image_url' in request.form:
+        image_url = request.form['image_url']
+        if image_url.startswith('http://') or image_url.startswith('https://'):
+            try:
+                resp = requests.get(image_url, timeout=5)
+                resp.raise_for_status()
+                image_file = BytesIO(resp.content)
+                image_file.name = "downloaded.jpg"
+            except Exception as e:
+                return jsonify({"error": "Failed to download image"}), 400
+
+    if not image_file:
+        return jsonify({"error": "No valid image provided"}), 400
+
+    result = detect_image(image_file)
+
+    return jsonify({
+        "id": str(uuid.uuid4()),
+        "report": {
+            "verdict": result.get('verdict', 'unknown'),
+            "ai": {
+                "is_detected": result.get('ai', {}).get('is_detected', False)
+            },
+            "human": {
+                "is_detected": result.get('human', {}).get('is_detected', False)
+            }
+        },
+        "facets": {
+            "nsfw": {
+                "version": "1.0.0",
+                "is_detected": False
+            },
+            "quality": {
+                "version": "1.0.0",
+                "is_detected": True
+            }
+        },
+        "created_at": datetime.utcnow().isoformat() + "Z"
+    })
 
 
 if __name__ == "__main__":
