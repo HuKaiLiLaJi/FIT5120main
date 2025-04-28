@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify,Blueprint
 from datetime import datetime, timedelta
 from models import db, Event
 import calendar
@@ -10,6 +10,7 @@ from sqlalchemy.sql.expression import func
 import uuid
 from io import BytesIO
 import requests
+
 
 app = Flask(__name__,template_folder='../templates',static_folder='../static') 
 
@@ -239,67 +240,99 @@ def get_random_story():
         'page': page
     })
 
-def detect_image(file):
-    headers = {
-        "Authorization": f"Bearer {OPTIC_API_KEY}"
-    }
-    files = {
-        'image': (file.name, file, 'image/jpeg')
-    }
-    response = requests.post(OPTIC_ENDPOINT, headers=headers, files=files)
-    return response.json()
 
+
+
+
+# Sightengine API account
+API_USER = '965122208'
+API_SECRET = '6ysrqwweiPV9V967LiPLSg8ZhC5rRKCV'
+
+SIGHTENGINE_URL = 'https://api.sightengine.com/1.0/check.json'
 
 @app.route('/detect/')
 def detect_page():
     return render_template('detect.html')
-@app.route('/detect/api', methods=['POST'])
+
+def detect_image(file=None, image_url=None, image_file=None):
+    # check image_file first
+    if image_file:
+        file = image_file  # if image_file，use as file
+    if file:
+        files = {'media': (file.name, file, 'image/jpeg')}
+        data = {
+            'models': 'genai',
+            'api_user': API_USER,
+            'api_secret': API_SECRET
+        }
+        response = requests.post(SIGHTENGINE_URL, files=files, data=data)
+    elif image_url:
+        params = {
+            'url': image_url,
+            'models': 'genai',
+            'api_user': API_USER,
+            'api_secret': API_SECRET
+        }
+        response = requests.get(SIGHTENGINE_URL, params=params)
+    else:
+        raise ValueError("No file or image_url provided")
+
+    return response.json()
+
+
+
+@app.route('/detect/api', methods=['POST'])  
+
+
 def detect_api():
+    print('Entering detect_api method')
+
+    # Default: no file or URL
     image_file = None
 
+    # If a file is uploaded
     if 'file' in request.files:
         file = request.files['file']
         if file.filename != '':
             image_file = file
 
+    # If no file, but an image URL is provided
     if not image_file and 'image_url' in request.form:
         image_url = request.form['image_url']
         if image_url.startswith('http://') or image_url.startswith('https://'):
             try:
                 resp = requests.get(image_url, timeout=5)
                 resp.raise_for_status()
+                # Load image content from URL into memory
                 image_file = BytesIO(resp.content)
                 image_file.name = "downloaded.jpg"
             except Exception as e:
+                print('Failed to download image from URL', e)
                 return jsonify({"error": "Failed to download image"}), 400
 
+    # If no file or valid URL is provided, return an error
     if not image_file:
         return jsonify({"error": "No valid image provided"}), 400
 
-    result = detect_image(image_file)
+    # Call Sightengine for image detection
+    result = detect_image(image_file=image_file)
 
+    # Output detection result
+    print('Sightengine returned:', result)
+
+    # Parse and return human-readable result
+    ai_score = result.get('type', {}).get('ai_generated', 0)  # AI generation score
+    verdict = 'AI Generated' if ai_score >= 0.5 else 'Not AI Generated'  # Determine if AI generated
+
+    # Return detailed results
     return jsonify({
-        "id": str(uuid.uuid4()),
+        "id": str(uuid.uuid4()),  # Return a unique request ID
         "report": {
-            "verdict": result.get('verdict', 'unknown'),
-            "ai": {
-                "is_detected": result.get('ai', {}).get('is_detected', False)
-            },
-            "human": {
-                "is_detected": result.get('human', {}).get('is_detected', False)
-            }
+            "verdict": verdict,  # AI generation verdict (AI Generated or Not AI Generated)
+            "ai_score": ai_score,  # AI generation score
+            "image_uri": result.get('media', {}).get('uri', ''),  # Return the URL of the detected image
         },
-        "facets": {
-            "nsfw": {
-                "version": "1.0.0",
-                "is_detected": False
-            },
-            "quality": {
-                "version": "1.0.0",
-                "is_detected": True
-            }
-        },
-        "created_at": datetime.utcnow().isoformat() + "Z"
+        "created_at": datetime.utcnow().isoformat() + "Z"  # Return the timestamp of the request
     })
 
 

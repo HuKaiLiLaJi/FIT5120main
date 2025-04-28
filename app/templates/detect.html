@@ -2,19 +2,21 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>AI picture decect</title>
+  <title>AI picture detect</title>
 </head>
 <body>
-  <h1>AI picture decect</h1>
+  <h1>AI picture detect</h1>
 
-  <h3>upload local picture：</h3>
-  <input type="file" id="fileInput">
+  <form id="uploadForm">
+    <h3>upload local picture：</h3>
+    <input type="file" id="fileInput">
 
-  <h3>input link：</h3>
-  <input type="text" id="urlInput" placeholder="image URL">
-  
-  <br><br>
-  <button onclick="submitForm()">start</button>
+    <h3>input link：</h3>
+    <input type="text" id="urlInput" placeholder="image URL">
+    
+    <br><br>
+    <button type="submit">start</button>
+  </form>
 
   <h3>result：</h3>
   <pre id="result"></pre>
@@ -22,3 +24,4 @@
   <script src="{{ url_for('static', filename='detect.js') }}"></script>
 </body>
 </html>
+

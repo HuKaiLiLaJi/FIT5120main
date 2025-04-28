@@ -1,29 +1,38 @@
-function submitForm() {
-    const fileInput = document.getElementById('fileInput');
-    const urlInput = document.getElementById('urlInput');
-    const resultBox = document.getElementById('result');
-  
-    const formData = new FormData();
-  
-    if (fileInput.files.length > 0) {
-      formData.append('file', fileInput.files[0]);
-    } else if (urlInput.value.trim() !== '') {
-      formData.append('image_url', urlInput.value.trim());
-    } else {
-      alert('请上传图片或输入图片链接！');
-      return;
-    }
-  
-    fetch('/detect/api', {   // 注意这里发到 /detect/api
+document.getElementById('uploadForm').addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  const formData = new FormData();
+  const fileInput = document.getElementById('fileInput');
+  const urlInput = document.getElementById('urlInput').value.trim();
+
+  if (fileInput.files.length > 0) {
+    formData.append('file', fileInput.files[0]);
+  } else if (urlInput !== '') {
+    formData.append('image_url', urlInput);
+  } else {
+    alert('Please select a file or enter a URL.');
+    return;
+  }
+
+  try {
+    const response = await fetch('/detect/api', {   
       method: 'POST',
       body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      resultBox.textContent = JSON.stringify(data, null, 2);
-    })
-    .catch(error => {
-      resultBox.textContent = '发生错误: ' + error;
     });
+
+    const data = await response.json();
+    console.log(data);
+
+    if (data.error) {
+      document.getElementById('result').innerText = "Error: " + data.error;
+    } else {
+      document.getElementById('result').innerHTML = `
+        <strong>Verdict:</strong> ${data.report.verdict}<br>
+        <strong>AI Score:</strong> ${data.report.ai_score}
+      `;
+    }
+  } catch (error) {
+    console.error(error);
+    document.getElementById('result').innerText = "Error occurred.";
   }
-  
+});
