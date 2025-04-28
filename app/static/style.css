@@ -81,3 +81,28 @@ body::before {
   color: var(--text-color);
   border: 1px solid var(--text-color);
 }
+
+/* --- Homepage square widgets --- */
+.widget-btn {
+  width: 150px;           /* square footprint */
+  height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  text-align: center;
+  white-space: normal;    /* allow two‑line labels */
+}
+.widget-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.5rem;
+  background: rgba(255,255,255,0.25); /* placeholder so the designer knows where to drop the SVG/PNG */
+  border-radius: 8px;
+}
+
+/* Make secondary‑palette widgets match primary (keep existing hover scale) */
+.btn.widget-btn {
+  padding: 0; /* full square is clickable */
+}
