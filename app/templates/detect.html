@@ -1,27 +1,28 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <title>AI picture detect</title>
-</head>
-<body>
-  <h1>AI picture detect</h1>
+{% extends "base.html" %}
+{% block title %}AI Detector{% endblock %}
 
-  <form id="uploadForm">
-    <h3>upload local picture：</h3>
-    <input type="file" id="fileInput">
+{% block content %}
+<div class="text-center">
+  <h1 class="mb-3">AI Image Detector</h1>
+  <p class="lead">Upload a picture or paste an image URL and we’ll tell you how likely it is to be AI‑generated.</p>
 
-    <h3>input link：</h3>
-    <input type="text" id="urlInput" placeholder="image URL">
-    
-    <br><br>
-    <button type="submit">start</button>
+  <form id="uploadForm" class="border rounded p-4 mx-auto" style="max-width: 600px;">
+    <div class="mb-3 text-start">
+      <label for="fileInput" class="form-label">Upload an image file</label>
+      <input class="form-control" type="file" id="fileInput" accept="image/*">
+    </div>
+    <p class="my-2">— or —</p>
+    <div class="mb-3 text-start">
+      <label for="urlInput" class="form-label">Paste image URL</label>
+      <input type="url" class="form-control" id="urlInput" placeholder="https://…/photo.jpg">
+    </div>
+    <button type="submit" class="btn btn-primary">Analyse</button>
   </form>
 
-  <h3>result：</h3>
-  <pre id="result"></pre>
+  <div id="result" class="mt-4 fw-bold"></div>
+</div>
+{% endblock %}
 
+{% block extra_scripts %}
   <script src="{{ url_for('static', filename='detect.js') }}"></script>
-</body>
-</html>
-
+{% endblock %}

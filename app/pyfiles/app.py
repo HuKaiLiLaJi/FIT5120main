@@ -21,6 +21,10 @@ OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
 # Create a virtual DB, gonna be replaced to real DB in the future
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+import pymysql
+pymysql.install_as_MySQLdb()
+
 db.init_app(app)
 # Connect to the deepseek
 client = OpenAI(api_key="sk-02e20ead4b434e64b235311055365479", base_url="https://api.deepseek.com")
