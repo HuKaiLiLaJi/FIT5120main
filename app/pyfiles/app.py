@@ -314,25 +314,25 @@ def detect_api():
     if not image_file:
         return jsonify({"error": "No valid image provided"}), 400
 
-    # Call Sightengine for image detection
+    # Call for image detection
     result = detect_image(image_file=image_file)
 
     # Output detection result
     print('Sightengine returned:', result)
 
-    # Parse and return human-readable result
+    #Parse and return human-readable result
     ai_score = result.get('type', {}).get('ai_generated', 0)  # AI generation score
     verdict = 'AI Generated' if ai_score >= 0.5 else 'Not AI Generated'  # Determine if AI generated
 
-    # Return detailed results
+    #Return detailed results
     return jsonify({
-        "id": str(uuid.uuid4()),  # Return a unique request ID
+        "id": str(uuid.uuid4()),  #Return a unique request ID
         "report": {
-            "verdict": verdict,  # AI generation verdict (AI Generated or Not AI Generated)
+            "verdict": verdict,  #AI generation verdict 
             "ai_score": ai_score,  # AI generation score
-            "image_uri": result.get('media', {}).get('uri', ''),  # Return the URL of the detected image
+            "image_uri": result.get('media', {}).get('uri', ''),  #the URL of the detected image
         },
-        "created_at": datetime.utcnow().isoformat() + "Z"  # Return the timestamp of the request
+        "created_at": datetime.utcnow().isoformat() + "Z"  #return the timestamp of the request
     })
 
 
