@@ -82,27 +82,34 @@ body::before {
   border: 1px solid var(--text-color);
 }
 
-/* --- Homepage square widgets --- */
+/* Homepage widget buttons */
 .widget-btn {
-  width: 150px;           /* square footprint */
-  height: 150px;
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border-radius: 12px;
-  text-align: center;
-  white-space: normal;    /* allow two‑line labels */
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  background-color: var(--secondary-color);
+  color: #fff;
+  font-weight: 600;
+  transition: transform 0.2s ease-in-out;
 }
+.widget-btn:hover { transform: scale(1.06); }
+
+/* Icon now stands alone – enlarged with no background square */
 .widget-icon {
-  width: 60px;
-  height: 60px;
-  margin-bottom: 0.5rem;
-  background: rgba(255,255,255,0.25); /* placeholder so the designer knows where to drop the SVG/PNG */
-  border-radius: 8px;
+  font-size: 3.5rem; /* make emoji big */
+  line-height: 1;
+  margin-bottom: 0.4rem;
 }
 
-/* Make secondary‑palette widgets match primary (keep existing hover scale) */
-.btn.widget-btn {
-  padding: 0; /* full square is clickable */
+/* Label tweaks */
+.widget-label {
+  font-size: 1rem;
+  line-height: 1.2;
 }
+
+/* Ensure original palette in case btn overridden by Bootstrap */
+.widget-btn.btn { border: none; }

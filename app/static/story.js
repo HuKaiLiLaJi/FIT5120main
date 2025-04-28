@@ -1,5 +1,3 @@
-let currentPage = 0; // not meaningful when we load random first
-
 // Utility: Fisher‑Yates shuffle
 function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {

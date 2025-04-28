@@ -1,36 +1,29 @@
-<!-- templates/index.html -->
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
-
 {% block content %}
 <div class="d-flex flex-column justify-content-center align-items-center text-center mt-5">
   <h1>SafeStream Guardian</h1>
-  <p class="lead mt-3">
-    Our vision is to empower parents with safe and balanced digital tools 
-    that help create a nurturing online and offline experience for your child.
-  </p>
+  <p class="lead mt-3">Our vision is to empower parents with safe and balanced digital tools that help create a nurturing online and offline experience for your child.</p>
 
-  <div class="widget-grid d-flex flex-wrap justify-content-center mt-4">
-    <button id="epic1" class="btn btn-primary widget-btn mx-2" onclick="window.location.href='{{ url_for('epic1') }}'">
-      <span class="widget-icon"></span>
-      <span>Education Hub</span>
+  <div class="d-flex flex-wrap justify-content-center mt-4">
+    <button class="widget-btn btn mx-2" onclick="location.href='{{ url_for('epic1') }}'">
+      <span class="widget-icon" role="img" aria-label="Graduation Cap">🎓</span>
+      <span class="widget-label">Education Hub</span>
     </button>
-    <button id="epic2" class="btn btn-primary widget-btn mx-2" onclick="window.location.href='{{ url_for('epic2') }}'">
-      <span class="widget-icon"></span>
-      <span>Digital Life Planner</span>
+    <button class="widget-btn btn mx-2" onclick="location.href='{{ url_for('epic2') }}'">
+      <span class="widget-icon" role="img" aria-label="Calendar">📅</span>
+      <span class="widget-label">Digital Planner</span>
     </button>
-    <button id="epic3" class="btn btn-primary widget-btn mx-2" onclick="window.location.href='{{ url_for('story_page') }}'">
-      <span class="widget-icon"></span>
-      <span>Cyber Story</span>
+    <button class="widget-btn btn mx-2" onclick="location.href='{{ url_for('story_page') }}'">
+      <span class="widget-icon" role="img" aria-label="Open Book">📖</span>
+      <span class="widget-label">Cyber Stories</span>
     </button>
-    <button id="detect" class="btn btn-primary widget-btn mx-2" onclick="window.location.href='{{ url_for('detect_page') }}'">
-      <span class="widget-icon"></span>
-      <span>AI Detector</span>
+    <button class="widget-btn btn mx-2" onclick="location.href='{{ url_for('detect_page') }}'">
+      <span class="widget-icon" role="img" aria-label="Robot">🤖</span>
+      <span class="widget-label">AI Detector</span>
     </button>
   </div>
 </div>
 {% endblock %}
 
-{% block extra_scripts %}
-  <script src="{{ url_for('static', filename='index.js') }}"></script>
-{% endblock %}
+{% block extra_scripts %}<script src="{{ url_for('static', filename='index.js') }}"></script>{% endblock %}
