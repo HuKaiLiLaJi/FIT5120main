@@ -10,8 +10,8 @@ from sqlalchemy.sql.expression import func
 import uuid
 from io import BytesIO
 import requests
-
-
+import pymysql
+pymysql.install_as_MySQLdb()
 app = Flask(__name__,template_folder='../templates',static_folder='../static') 
 
 OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
@@ -19,7 +19,7 @@ OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
 
 
 # Create a virtual DB, gonna be replaced to real DB in the future
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 import pymysql
@@ -341,4 +341,4 @@ def detect_api():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0',port=5000)
