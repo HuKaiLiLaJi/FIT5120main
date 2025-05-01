@@ -16,7 +16,7 @@ app = Flask(__name__,template_folder='../templates',static_folder='../static')
 
 OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
 
-
+PASSWORD='fit5120ta03'
 
 # Create a virtual DB, gonna be replaced to real DB in the future
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
@@ -39,9 +39,14 @@ def get_week_dates(base_date=None):
     start = base_date - timedelta(days=base_date.weekday())
     return [(start + timedelta(days=i)).date() for i in range(7)] # List of 7 dates
 # Home page
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
+    if request.method == 'POST':
+        if request.form.get('password') == PASSWORD:
+            return render_template('index.html')  # Load homepage after successful authentication
+        else:
+            return render_template('login.html', error='Incorrect password')  # Show error message
+    return render_template('login.html')  # Show login page on first visit
 
 @app.route('/epic1')
 def epic1():
