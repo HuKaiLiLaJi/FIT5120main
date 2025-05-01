@@ -200,6 +200,13 @@ def get_age_recommendation():
     analysis_result = response.choices[0].message.content
     return jsonify({'recommendation': analysis_result})
 
+
+
+# ------------Iteration 2 ----------------
+
+
+
+# Define a SQLAlchemy model for cyber stories
 class CyberStory(db.Model):
     __tablename__ = 'cyber_story'
     id = db.Column(db.Integer, primary_key=True)
@@ -211,13 +218,14 @@ class CyberStory(db.Model):
 @app.route('/story')
 def story_page():
     return render_template('story.html')
-
+# API endpoint to get paginated list of stories
 @app.route('/api/stories')
 def get_stories():
-    page = int(request.args.get('page', 1))
+    page = int(request.args.get('page', 1))# Get the page number from query string default 1
     per_page = 1
     stories = CyberStory.query.paginate(page=page, per_page=per_page, error_out=False)
     
+    # Format the stories into a list of dictionaries
     data = [{
         'id': s.id,
         'title': s.title,
@@ -225,12 +233,13 @@ def get_stories():
         'moral': s.moral
     } for s in stories.items]
 
-    return jsonify({
+    return jsonify({          # Return story data with pagination info
         'stories': data,
         'has_next': stories.has_next,
         'has_prev': stories.has_prev,
         'current_page': page
     })
+ # API endpoint to get a random story   
 @app.route('/api/stories/random')
 def get_random_story():
     total = CyberStory.query.count()
@@ -239,7 +248,7 @@ def get_random_story():
 
     
     per_page = 1
-    page = (offset // per_page) + 1
+    page = (offset // per_page) + 1# Calculate which page this story would appear on
 
     return jsonify({
         'id': story.id,
@@ -258,7 +267,7 @@ API_USER = '965122208'
 API_SECRET = '6ysrqwweiPV9V967LiPLSg8ZhC5rRKCV'
 
 SIGHTENGINE_URL = 'https://api.sightengine.com/1.0/check.json'
-
+# Route for the AI image detector webpage
 @app.route('/detect/')
 def detect_page():
     return render_template('detect.html')
@@ -275,7 +284,7 @@ def detect_image(file=None, image_url=None, image_file=None):
             'api_secret': API_SECRET
         }
         response = requests.post(SIGHTENGINE_URL, files=files, data=data)
-    elif image_url:
+    elif image_url:         # If image_url is provided, send it as query parameters
         params = {
             'url': image_url,
             'models': 'genai',
@@ -283,7 +292,7 @@ def detect_image(file=None, image_url=None, image_file=None):
             'api_secret': API_SECRET
         }
         response = requests.get(SIGHTENGINE_URL, params=params)
-    else:
+    else:         # If neither file nor image_url is provided, raise an error
         raise ValueError("No file or image_url provided")
 
     return response.json()
@@ -311,8 +320,7 @@ def detect_api():
         if image_url.startswith('http://') or image_url.startswith('https://'):
             try:
                 resp = requests.get(image_url, timeout=5)
-                resp.raise_for_status()
-                # Load image content from URL into memory
+                resp.raise_for_status() # Load image content from URL into memory
                 image_file = BytesIO(resp.content)
                 image_file.name = "downloaded.jpg"
             except Exception as e:
