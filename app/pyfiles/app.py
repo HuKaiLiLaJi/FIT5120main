@@ -41,12 +41,12 @@ def get_week_dates(base_date=None):
 # Home page
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if request.method == 'POST':
-        if request.form.get('password') == PASSWORD:
-            return render_template('index.html')  # Load homepage after successful authentication
-        else:
-            return render_template('login.html', error='Incorrect password')  # Show error message
-    return render_template('login.html')  # Show login page on first visit
+#    if request.method == 'POST':
+#        if request.form.get('password') == PASSWORD:
+#            return render_template('index.html')  # Load homepage after successful authentication
+#        else:
+#           return render_template('login.html', error='Incorrect password')  # Show error message
+    return render_template('index.html')  # Show login page on first visit
 
 @app.route('/epic1')
 def epic1():
@@ -351,6 +351,98 @@ def detect_api():
         },
         "created_at": datetime.utcnow().isoformat() + "Z"  #return the timestamp of the request
     })
+
+
+# ------------Iteration 3 ----------------
+
+class ActivityEntry(db.Model):
+    __tablename__ = 'activity_entries'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    activity_name = db.Column(db.String(255), nullable=False)
+    enjoyment = db.Column(db.Integer, nullable=False)
+    amount = db.Column(db.Integer, nullable=False)
+    activeness = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    user = db.relationship('User', backref='activity_entries')
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), nullable=False, unique=True)
+
+class Activity(db.Model):
+    __tablename__ = 'activities'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False, unique=True)
+    description = db.Column(db.String(500), nullable=True)
+    
+@app.route('/activities', methods=['GET', 'POST', 'DELETE'])
+def manage_activities():
+    if request.method == 'POST':
+        data = request.json
+        name = data.get('name')
+        description = data.get('description', '')
+        if not name:
+            return jsonify({'error': 'Activity name is required.'}), 400
+        new_activity = Activity(name=name, description=description)
+        db.session.add(new_activity)
+        db.session.commit()
+        return jsonify({'message': 'Activity added successfully!'}), 201
+    elif request.method == 'DELETE':
+        activity_id = request.args.get('id')
+        if not activity_id:
+            return jsonify({'error': 'Activity ID is required.'}), 400
+        activity = Activity.query.get(activity_id)
+        if not activity:
+            return jsonify({'error': 'Activity not found.'}), 404
+        db.session.delete(activity)
+        db.session.commit()
+        return jsonify({'message': 'Activity deleted successfully!'}), 200
+    else:
+        activities = Activity.query.all()
+        return jsonify([{'id': a.id, 'name': a.name, 'description': a.description} for a in activities]), 200
+    
+    
+@app.route('/activity-entries', methods=['POST'])
+def add_activity_entry():
+    data = request.json
+    user_id = data.get('user_id')
+    activity_name = data.get('activity_name')
+    enjoyment = data.get('enjoyment')
+    amount = data.get('amount')
+    activeness = data.get('activeness')
+    if not all([user_id, activity_name, enjoyment, amount, activeness]):
+        return jsonify({'error': 'All fields are required.'}), 400
+    new_entry = ActivityEntry(
+        user_id=user_id,
+        activity_name=activity_name,
+        enjoyment=enjoyment,
+        amount=amount,
+        activeness=activeness
+    )
+    db.session.add(new_entry)
+    db.session.commit()
+    return jsonify({'message': 'Activity entry added successfully!'}), 201 
+
+
+
+
+@app.route('/child-journal')
+def child_journal():
+    return render_template('journal.html')
+
+
+# 家长查看剪贴簿页面
+@app.route('/parent-scrapbook')
+def parent_scrapbook():
+    return render_template('scrapbook.html')
+
+
+
+
+
+
 
 
 if __name__ == "__main__":

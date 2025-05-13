@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="/static/style.css">
+    <title>Parent Scrapbook</title>
+</head>
+<body>
+    <h1>Parent Scrapbook</h1>
+    <button onclick="fetchScrapbook()">Load Scrapbook</button>
+    <div id="scrapbook"></div>
+
+    <script src="{{ url_for('static', filename='scrapbook.js') }}"></script>
+</body>
+</html>

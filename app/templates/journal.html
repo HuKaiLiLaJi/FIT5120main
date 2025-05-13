@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weekly Journal</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Journal.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Weekly Journal</h1>
+
+        <!-- Activity Input Section -->
+        <div id="activity-form" class="activity-form">
+            <input type="text" id="activity-name" placeholder="Enter activity name">
+            <button onclick="addActivity()">Add Activity</button>
+        </div>
+
+        <!-- Available Activities -->
+        <h2>Available Activities</h2>
+        <div id="activities" class="activities" ondragover="allowDrop(event)"></div>
+
+        <!-- Done This Week Section -->
+        <h2>Done This Week</h2>
+        <div id="done-this-week" class="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+    </div>
+
+    <script src="{{ url_for('static', filename='Journal.js') }}"></script>
+</body>
+</html>
