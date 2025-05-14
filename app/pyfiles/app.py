@@ -432,15 +432,92 @@ def add_activity_entry():
 def child_journal():
     return render_template('journal.html')
 
-
-# 家长查看剪贴簿页面
-@app.route('/parent-scrapbook')
-def parent_scrapbook():
-    return render_template('scrapbook.html')
+@app.route('/parent')
+def parent():
+    return render_template('parent.html')
 
 
 
+@app.route('/activity-entries', methods=['GET'])
+def get_activity_entries():
+    user_id = request.args.get('user_id')
+    year = int(request.args.get('year'))
+    week = int(request.args.get('week'))
 
+    if not user_id or not year or not week:
+        return jsonify({'error': 'Missing required parameters'}), 400
+
+    # 修正日期计算
+    start_date = datetime.strptime(f"{year}-W{week}-1", "%Y-W%W-%w")
+    end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
+
+    print(f"Start Date: {start_date}, End Date: {end_date}")
+
+    # 查询该用户在指定周的所有活动
+    entries = ActivityEntry.query.filter(
+        ActivityEntry.user_id == int(user_id),
+        ActivityEntry.timestamp >= start_date,
+        ActivityEntry.timestamp <= end_date
+    ).all()
+
+    results = [
+        {
+            'activity_name': entry.activity_name,
+            'enjoyment': entry.enjoyment,
+            'amount': entry.amount,
+            'activeness': entry.activeness,
+            'timestamp': entry.timestamp.strftime('%Y-%m-%d')
+        }
+        for entry in entries
+    ]
+
+    return jsonify(results), 200
+
+
+
+@app.route('/generate-summary', methods=['GET'])
+def generate_summary():
+    user_id = request.args.get('user_id')
+    year = request.args.get('year')
+    week = request.args.get('week')
+
+    if not user_id or not year or not week:
+        return jsonify({'error': 'Missing required parameters'}), 400
+
+    
+    start_date = datetime.strptime(f"{year}-W{int(week)}-1", "%Y-W%W-%w")
+    end_date = start_date + timedelta(days=6)
+    print(start_date,end_date)
+
+    
+    entries = ActivityEntry.query.filter(
+        ActivityEntry.user_id == int(user_id),
+        ActivityEntry.timestamp >= start_date,
+        ActivityEntry.timestamp <= end_date
+    ).all()
+
+    
+    if not entries:
+        return jsonify({'summary': 'No activities found for the selected week.'}), 200
+
+    activity_texts = [f"{entry.activity_name} (Enjoyment: {entry.enjoyment}, Time(hour): {entry.amount}, Activeness: {entry.activeness})" for entry in entries]
+    prompt = f"Summarize the following activities for user {user_id} during week {week}:\n" + "\n".join(activity_texts)
+
+    
+    try:
+        response = client.chat.completions.create(
+            model="deepseek-chat",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant, helping parents analyze child's behavior"},
+                {"role": "user", "content": prompt},
+            ],
+            stream=False
+        )
+        summary = response.choices[0].message.content.strip()
+    except Exception as e:
+        return jsonify({'error': 'Failed to generate summary. Please try again later.'}), 500
+
+    return jsonify({'summary': summary}), 200
 
 
 
