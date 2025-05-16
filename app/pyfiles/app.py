@@ -436,7 +436,9 @@ def child_journal():
 def parent():
     return render_template('parent.html')
 
-
+@app.route('/visual')
+def visual():
+    return render_template('visual.html')
 
 @app.route('/activity-entries', methods=['GET'])
 def get_activity_entries():
