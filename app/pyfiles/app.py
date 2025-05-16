@@ -379,41 +379,71 @@ class Activity(db.Model):
     
 @app.route('/activities', methods=['GET', 'POST', 'DELETE'])
 def manage_activities():
+    # adding a new activity
     if request.method == 'POST':
         data = request.json
         name = data.get('name')
-        description = data.get('description', '')
+        description = data.get('description', '')  # Use an empty string as the default 
+        
+        # Validate the activity name is provided
         if not name:
             return jsonify({'error': 'Activity name is required.'}), 400
+        
+        # Create a new activity 
         new_activity = Activity(name=name, description=description)
         db.session.add(new_activity)
         db.session.commit()
+        
         return jsonify({'message': 'Activity added successfully!'}), 201
+    
+    # delete an existing activity
     elif request.method == 'DELETE':
         activity_id = request.args.get('id')
+        
+        # Validate the activity ID is provided
         if not activity_id:
             return jsonify({'error': 'Activity ID is required.'}), 400
+        
+        # Find the activity by ID
         activity = Activity.query.get(activity_id)
+        
+        # Check if the activity exists
         if not activity:
             return jsonify({'error': 'Activity not found.'}), 404
+        
+        # Delete 
         db.session.delete(activity)
         db.session.commit()
+        
+        
         return jsonify({'message': 'Activity deleted successfully!'}), 200
+    
+    # retrieving all activities
     else:
         activities = Activity.query.all()
+        
+        # Return the list of activities as JSON
         return jsonify([{'id': a.id, 'name': a.name, 'description': a.description} for a in activities]), 200
+
     
     
 @app.route('/activity-entries', methods=['POST'])
 def add_activity_entry():
+    # Get the JSON data 
     data = request.json
+    
+    # Extract required fields
     user_id = data.get('user_id')
     activity_name = data.get('activity_name')
     enjoyment = data.get('enjoyment')
     amount = data.get('amount')
     activeness = data.get('activeness')
+    
+    # Validate all required fields 
     if not all([user_id, activity_name, enjoyment, amount, activeness]):
         return jsonify({'error': 'All fields are required.'}), 400
+    
+    # Create
     new_entry = ActivityEntry(
         user_id=user_id,
         activity_name=activity_name,
@@ -421,9 +451,14 @@ def add_activity_entry():
         amount=amount,
         activeness=activeness
     )
+    
+    # Add the new entry to the database 
     db.session.add(new_entry)
     db.session.commit()
-    return jsonify({'message': 'Activity entry added successfully!'}), 201 
+    
+    
+    return jsonify({'message': 'Activity entry added successfully!'}), 201
+
 
 
 
@@ -442,26 +477,40 @@ def visual():
 
 @app.route('/activity-entries', methods=['GET'])
 def get_activity_entries():
+    # Extract query parameters 
     user_id = request.args.get('user_id')
-    year = int(request.args.get('year'))
-    week = int(request.args.get('week'))
+    year = request.args.get('year')
+    week = request.args.get('week')
 
+    # Validate required parameters 
     if not user_id or not year or not week:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    
-    start_date = datetime.strptime(f"{year}-W{week}-1", "%Y-W%W-%w")
-    end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
+    #Convert year and week to integers
+    try:
+        year = int(year)
+        week = int(week)
+    except ValueError:
+        return jsonify({'error': 'Year and week must be integers'}), 400
 
-    print(f"Start Date: {start_date}, End Date: {end_date}")
+    # Calculate the start and end dates
+    try:
+        start_date = datetime.strptime(f"{year}-W{week}-1", "%Y-W%W-%w")
+        end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
+    except ValueError:
+        return jsonify({'error': 'Invalid year or week format'}), 400
 
     
+    #print(f"Start Date: {start_date}, End Date: {end_date}")
+
+    # Query the database for activity entries 
     entries = ActivityEntry.query.filter(
         ActivityEntry.user_id == int(user_id),
         ActivityEntry.timestamp >= start_date,
         ActivityEntry.timestamp <= end_date
     ).all()
 
+    # Format the results 
     results = [
         {
             'activity_name': entry.activity_name,
@@ -473,39 +522,52 @@ def get_activity_entries():
         for entry in entries
     ]
 
+    # Return the results 
     return jsonify(results), 200
+
 
 
 
 @app.route('/generate-summary', methods=['GET'])
 def generate_summary():
+    # Extract query parameters 
     user_id = request.args.get('user_id')
     year = request.args.get('year')
     week = request.args.get('week')
 
+    # Validate  required parameters 
     if not user_id or not year or not week:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    
-    start_date = datetime.strptime(f"{year}-W{int(week)}-1", "%Y-W%W-%w")
-    end_date = start_date + timedelta(days=6)
-    print(start_date,end_date)
+    # Calculate the start and end dates 
+    try:
+        start_date = datetime.strptime(f"{year}-W{int(week)}-1", "%Y-W%W-%w")
+        end_date = start_date + timedelta(days=6)
+    except ValueError:
+        return jsonify({'error': 'Invalid year or week format'}), 400
 
-    
+    # Debug print for date range
+    #print(start_date, end_date)
+
+    # Query the database 
     entries = ActivityEntry.query.filter(
         ActivityEntry.user_id == int(user_id),
         ActivityEntry.timestamp >= start_date,
         ActivityEntry.timestamp <= end_date
     ).all()
 
-    
+    # Return a message if no activities 
     if not entries:
         return jsonify({'summary': 'No activities found for the selected week.'}), 200
 
-    activity_texts = [f"{entry.activity_name} (Enjoyment: {entry.enjoyment}, Time(hour): {entry.amount}, Activeness: {entry.activeness})" for entry in entries]
+    # activity text for the summary prompt
+    activity_texts = [
+        f"{entry.activity_name} (Enjoyment: {entry.enjoyment}, Time(hour): {entry.amount}, Activeness: {entry.activeness})"
+        for entry in entries
+    ]
     prompt = f"Summarize the following activities for user {user_id} during week {week}:\n" + "\n".join(activity_texts)
 
-    
+    # Call the DeepSeek API to generate the summary
     try:
         response = client.chat.completions.create(
             model="deepseek-chat",
@@ -515,11 +577,15 @@ def generate_summary():
             ],
             stream=False
         )
+        # Extract the summary from the response
         summary = response.choices[0].message.content.strip()
     except Exception as e:
+        # Return an error if the API call fails
         return jsonify({'error': 'Failed to generate summary. Please try again later.'}), 500
 
+    # Return the generated summary 
     return jsonify({'summary': summary}), 200
+
 
 
 

@@ -10,7 +10,7 @@ function drag(ev) {
 function drop(ev) {
     ev.preventDefault();
     
-    // 获取用户 ID
+    
     const userId = document.getElementById("user-id").value.trim();
     if (!userId) {
         alert("Please enter a valid user ID before dropping the activity.");
