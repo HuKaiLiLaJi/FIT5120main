@@ -353,7 +353,7 @@ def detect_api():
     })
 
 
-# ------------Iteration 3 ----------------
+# ------------Iteration 3 -------------------------------------
 
 class ActivityEntry(db.Model):
     __tablename__ = 'activity_entries'
@@ -447,13 +447,13 @@ def get_activity_entries():
     if not user_id or not year or not week:
         return jsonify({'error': 'Missing required parameters'}), 400
 
-    # 修正日期计算
+    
     start_date = datetime.strptime(f"{year}-W{week}-1", "%Y-W%W-%w")
     end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
 
     print(f"Start Date: {start_date}, End Date: {end_date}")
 
-    # 查询该用户在指定周的所有活动
+    
     entries = ActivityEntry.query.filter(
         ActivityEntry.user_id == int(user_id),
         ActivityEntry.timestamp >= start_date,
