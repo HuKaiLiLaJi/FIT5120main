@@ -1,44 +1,55 @@
-function fetchEntries() {
-    const userId = document.getElementById('user-id').value.trim();
-    const weekValue = document.getElementById('week-select').value;
+function confirmParentInputs() {
+    const userId = document.getElementById("popup-user-id").value.trim();
+    const week = document.getElementById("popup-week").value;
 
-    if (!userId || !weekValue) {
-        alert('Please enter a valid User ID and select a week.');
+    if (!userId || !week) {
+        alert("Please fill in both user ID and week.");
         return;
     }
 
-    // Extracting year and week
-    const [year, week] = weekValue.split('-W');
+    document.getElementById("user-id").value = userId;
+    document.getElementById("week-select").value = week;
+    document.getElementById("parent-popup").remove();
 
-    fetch(`/activity-entries?user_id=${userId}&year=${year}&week=${week-1}`)
+    fetchEntries();
+}
+
+function fetchEntries() {
+    const userId = document.getElementById("user-id").value.trim();
+    const week = document.getElementById("week-select").value;
+
+    const [year, weekNum] = week.split("-W");
+
+    fetch(`/activity-entries?user_id=${userId}&year=${year}&week=${weekNum}`)
         .then(res => res.json())
-        .then(data => {
-            const activityList = document.getElementById('activity-list');
-            activityList.innerHTML = '';
+        .then(entries => {
+            const container = document.getElementById("activity-list");
+            container.innerHTML = "";
 
-            if (data.error) {
-                activityList.innerHTML = `<p>${data.error}</p>`;
+            if (!entries.length) {
+                container.innerHTML = "<p>No entries for this week.</p>";
                 return;
             }
 
-            if (data.length === 0) {
-                activityList.innerHTML = '<p>No activities found for this week.</p>';
-                return;
-            }
-
-            const ul = document.createElement('ul');
-            data.forEach(entry => {
-                const li = document.createElement('li');
-                li.textContent = `${entry.activity_name} - Enjoyment: ${entry.enjoyment}, Amount: ${entry.amount}, Activeness: ${entry.activeness}`;
-                ul.appendChild(li);
+            entries.forEach(entry => {
+                const card = document.createElement("div");
+                card.classList.add("entry-card");
+                card.innerHTML = `
+                    <h4>${entry.activity_name}</h4>
+                    <p>Enjoyment: ${entry.enjoyment}/3</p>
+                    <p>Amount: ${entry.amount}/3</p>
+                    <p>Activeness: ${entry.activeness}/3</p>
+                    <p><small>${entry.timestamp}</small></p>
+                `;
+                container.appendChild(card);
             });
-            activityList.appendChild(ul);
         })
         .catch(err => {
+            alert("Failed to load activity data.");
             console.error(err);
-            alert('Error fetching activities. Please try again.');
         });
 }
+
 
 
 function generateSummary() {

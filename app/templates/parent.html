@@ -9,12 +9,20 @@
 <body>
     <div class="container">
         <h1>Parent View</h1>
-        <div class="controls">
-            <label for="user-id">User ID:</label>
-            <input type="number" id="user-id" placeholder="Enter user ID">
-            <label for="week-select">Select Week:</label>
-            <input type="week" id="week-select">
-            <button onclick="fetchEntries()">Search</button>
+        <!-- Hidden input storage -->
+        <input type="hidden" id="user-id">
+        <input type="hidden" id="week-select">
+
+        <!-- Modal popup for parent input -->
+        <div id="parent-popup" class="popup-overlay">
+            <div class="popup-box">
+                <h3>🔎 View Scrapbook</h3>
+                <label>User ID</label>
+                <input type="number" id="popup-user-id" placeholder="e.g. 1" class="form-control mb-2">
+                <label>Select Week</label>
+                <input type="week" id="popup-week" class="form-control mb-3">
+                <button class="btn btn-primary w-100" onclick="confirmParentInputs()">Load</button>
+            </div>
         </div>
         <div id="activity-list" class="results"></div>
         <button onclick="generateSummary()" style="margin-top: 20px;">Generate Summary</button>
