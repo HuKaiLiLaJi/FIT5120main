@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <link rel="stylesheet" href="/static/style.css">
-    <title>Parent Scrapbook</title>
-</head>
-<body>
-    <h1>Parent Scrapbook</h1>
-    <button onclick="fetchScrapbook()">Load Scrapbook</button>
-    <div id="scrapbook"></div>
-
-    <script src="{{ url_for('static', filename='scrapbook.js') }}"></script>
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Parent Scrapbook{% endblock %}
+{% block content %}
+<h1 class="text-center">📖 Weekly Activity Scrapbook</h1>
+<p class="text-muted text-center">View your child's reflections on screen time & activities.</p>
+<div class="text-center">
+  <button class="btn btn-primary" onclick="fetchScrapbook()">📥 Load Scrapbook</button>
+</div>
+<div id="scrapbook" class="mt-4 p-3 border rounded bg-light"></div>
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='scrapbook.js') }}"></script>
+{% endblock %}

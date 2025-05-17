@@ -77,3 +77,43 @@ ul li {
     font-weight: bold;
     color: #555;
 }
+
+/* Modal */
+.popup-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.popup-box {
+    background: #fff8f0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    width: 320px;
+}
+
+/* Animated cards */
+.entry-card {
+    background: #fff;
+    border-left: 6px solid #007bff;
+    padding: 15px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    animation: fadeInUp 0.4s ease;
+    transition: transform 0.2s ease;
+}
+.entry-card:hover {
+    transform: scale(1.02);
+}
+
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}

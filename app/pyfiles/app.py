@@ -459,13 +459,9 @@ def add_activity_entry():
     
     return jsonify({'message': 'Activity entry added successfully!'}), 201
 
-
-
-
-
-@app.route('/child-journal')
-def child_journal():
-    return render_template('journal.html')
+@app.route('/mydigitalscrapbook')
+def my_digital_scrapbook():
+    return render_template('mydigitalscrapbook.html')
 
 @app.route('/parent')
 def parent():

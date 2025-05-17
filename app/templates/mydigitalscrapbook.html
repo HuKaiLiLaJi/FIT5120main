@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Digital Scrapbook{% endblock %}
+
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='mydigitalscrapbook.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">🗂️ My Digital Scrapbook</h1>
+    
+    <!-- User ID -->
+    <!-- Hidden user ID storage -->
+    <input type="hidden" id="user-id">
+
+    <!-- Startup popup modal -->
+    <div id="user-id-popup" class="popup-overlay">
+    <div class="popup-box">
+        <h3>👤 Enter Your User ID</h3>
+        <input type="number" id="popup-user-id" class="form-control mb-3" placeholder="e.g. 1">
+        <button class="btn btn-primary w-100" onclick="confirmUserId()">Start</button>
+    </div>
+    </div>
+
+    <!-- Add New Activity -->
+    <div class="activity-form">
+        <input type="text" id="activity-name" placeholder="Create new activity (e.g. 🎮 Gaming)">
+        <button onclick="addActivity()">Add</button>
+    </div>
+
+    <!-- Available Activities -->
+    <div class="container-flex">
+        <div class="zone-box">
+          <h3>🎨 Pick Your Weekly Activities</h3>
+          <div id="activities" class="activities" ondragover="allowDrop(event)"></div>
+        </div>
+      
+        <div class="zone-box">
+          <h3>✅ Done This Week</h3>
+          <div id="done-this-week" class="dropzone" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        </div>
+      </div>
+      
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='mydigitalscrapbook.js') }}"></script>
+{% endblock %}
