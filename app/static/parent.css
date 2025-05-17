@@ -1,119 +1,94 @@
-body {
+/* Scope everything under #parent-view */
+
+#parent-view {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    margin: 0;
     padding: 20px;
 }
-
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+  
+#parent-view h1, 
+#parent-view h2 {
+color: #333;
+}
+  
+#parent-view .results,
+#parent-view .summary {
+margin-top: 20px;
+padding: 15px;
+background-color: #f0f0f0;
+border-radius: 5px;
 }
 
-h1, h2 {
-    color: #333;
+#parent-view .entry-card {
+background: #fff;
+border-left: 6px solid #007bff;
+padding: 15px;
+margin-bottom: 12px;
+border-radius: 8px;
+box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+animation: fadeInUp 0.4s ease;
+transition: transform 0.2s ease;
 }
-
-.controls {
-    margin-bottom: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.controls label {
-    margin-right: 10px;
-    font-weight: bold;
-}
-
-.controls input {
-    flex-grow: 1;
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-}
-
-.controls button {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.controls button:hover {
-    background-color: #0056b3;
-}
-
-.results, .summary {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #f0f0f0;
-    border-radius: 5px;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul li {
-    background-color: #ffffff;
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-}
-
-.summary p {
-    margin: 0;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Modal */
-.popup-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.popup-box {
-    background: #fff8f0;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    width: 320px;
-}
-
-/* Animated cards */
-.entry-card {
-    background: #fff;
-    border-left: 6px solid #007bff;
-    padding: 15px;
-    margin-bottom: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    animation: fadeInUp 0.4s ease;
-    transition: transform 0.2s ease;
-}
-.entry-card:hover {
-    transform: scale(1.02);
+#parent-view .entry-card:hover {
+transform: scale(1.02);
 }
 
 @keyframes fadeInUp {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
+0% { opacity: 0; transform: translateY(10px); }
+100% { opacity: 1; transform: translateY(0); }
 }
+
+/* Modal (leave global if also used elsewhere, otherwise scope too) */
+.popup-overlay {
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: rgba(0, 0, 0, 0.6);
+display: flex;
+justify-content: center;
+align-items: center;
+z-index: 1000;
+}
+
+.popup-box {
+background: #fff8f0;
+padding: 25px;
+border-radius: 12px;
+box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+width: 320px;
+}
+
+/* Grid wrapper */
+#parent-view .activity-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 16px;
+    margin-top: 10px;
+  }
+  
+  /* Individual cards */
+  #parent-view .activity-card {
+    background-color: #ffffff;
+    border: 2px solid #007bff;
+    border-radius: 16px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    transition: transform 0.2s ease;
+  }
+  
+  #parent-view .activity-card:hover {
+    transform: scale(1.03);
+  }
+  
+  #parent-view .activity-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #007bff;
+    margin-bottom: 8px;
+  }
+  
+  #parent-view .activity-detail {
+    font-size: 0.95rem;
+    margin: 2px 0;
+  }
+  

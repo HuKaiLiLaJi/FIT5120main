@@ -1,7 +1,7 @@
 function confirmUserId() {
     const input = document.getElementById("popup-user-id").value.trim();
     if (!input || isNaN(input)) {
-        alert("Please enter a valid numeric user ID.");
+        alert("Please enter a valid user ID.");
         return;
     }
     document.getElementById("user-id").value = input;

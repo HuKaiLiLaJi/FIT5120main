@@ -1,33 +1,126 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parent View</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='parent.css') }}">
-</head>
-<body>
-    <div class="container">
-        <h1>Parent View</h1>
-        <!-- Hidden input storage -->
-        <input type="hidden" id="user-id">
-        <input type="hidden" id="week-select">
+{% extends "base.html" %}
+{% block title %}Parent View{% endblock %}
 
-        <!-- Modal popup for parent input -->
-        <div id="parent-popup" class="popup-overlay">
-            <div class="popup-box">
-                <h3>🔎 View Scrapbook</h3>
-                <label>User ID</label>
-                <input type="number" id="popup-user-id" placeholder="e.g. 1" class="form-control mb-2">
-                <label>Select Week</label>
-                <input type="week" id="popup-week" class="form-control mb-3">
-                <button class="btn btn-primary w-100" onclick="confirmParentInputs()">Load</button>
-            </div>
-        </div>
-        <div id="activity-list" class="results"></div>
-        <button onclick="generateSummary()" style="margin-top: 20px;">Generate Summary</button>
-        <div id="summary" class="summary"></div>
+{% block extra_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='parent.css') }}">
+{% endblock %}
+
+{% block content %}
+<div id="parent-view">
+    <div class="text-center">
+        <h1 class="mb-2">👨‍👩‍👧 Parent View</h1>
+        <p class="lead text-muted mb-4">Search and analyze your child’s weekly digital reflections.</p>
     </div>
-    <script src="{{ url_for('static', filename='parent.js') }}"></script>
-</body>
-</html>
+
+    <!-- Modal Popup for User ID + Week -->
+    <div id="parent-popup" class="popup-overlay">
+        <div class="popup-box">
+        <h3>🔎 View Scrapbook</h3>
+        <label>User ID</label>
+        <input type="number" id="popup-user-id" placeholder="e.g. 1" class="form-control mb-2">
+        <label>Select Week</label>
+        <input type="week" id="popup-week" class="form-control mb-3">
+        <div class="d-flex justify-content-between gap-2">
+            <button class="btn btn-secondary w-50" onclick="window.location.href='/'">Cancel</button>
+            <button class="btn btn-primary w-50" onclick="confirmParentInputs()">Load</button>
+        </div>
+        </div>
+    </div>
+  
+  
+
+    <input type="hidden" id="user-id">
+    <input type="hidden" id="week-select">
+
+    <div class="text-end">
+        <button class="btn btn-secondary mb-3" onclick="generateSummary()">🧠 Generate Summary</button>
+    </div>
+
+    <div id="activity-list" class="results"></div>
+    <div id="summary" class="summary mt-4"></div>
+
+<!-- Insights & Resources Section -->
+<div class="row mt-5" id="insight-section">
+    <!-- Left: Tableau Chart -->
+    <div class="col-md-7 mb-4">
+      <h2 class="text-center mb-3">📊 Mental Health & Screen Time Insight</h2>
+      <p class="text-muted text-center mb-4">Data visualization from external research comparing screen time with children's mental health needs.</p>
+      <div class='tableauPlaceholder' id='viz1746961361179' style='position: relative; width: 100%;'>
+        <noscript>
+          <a href='#'>
+            <img alt='Mental Health vs Screen Time'
+                 src='https://public.tableau.com/static/images/It/Iteration3_17464504151580/Sheet12/1_rss.png'
+                 style='border: none; width: 100%;' />
+          </a>
+        </noscript>
+        <object class='tableauViz' style='display:none; width: 100%;'>
+          <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+          <param name='embed_code_version' value='3' />
+          <param name='site_root' value='' />
+          <param name='name' value='Iteration3_17464504151580/Sheet12' />
+          <param name='tabs' value='no' />
+          <param name='toolbar' value='yes' />
+          <param name='static_image' value='https://public.tableau.com/static/images/It/Iteration3_17464504151580/Sheet12/1.png' />
+          <param name='animate_transition' value='yes' />
+          <param name='display_static_image' value='yes' />
+          <param name='display_spinner' value='yes' />
+          <param name='display_overlay' value='yes' />
+          <param name='display_count' value='yes' />
+          <param name='language' value='en-US' />
+          <param name='filter' value='publish=yes' />
+        </object>
+      </div>
+    </div>
+  
+    <!-- Right: Supporting Resources -->
+    <div class="col-md-5" id="supporting-resources">
+      <h2 class="text-center mb-3">🛠️ Supporting Portals</h2>
+      <p class="text-muted text-center mb-4">Helpful websites and helplines for child safety, digital wellbeing, and parenting support.</p>
+  
+      <div class="resource-list">
+        <div class="resource-card">
+          <h5>📱 Digital Child</h5>
+          <p>Resources for parents navigating children’s digital environments.</p>
+          <a href="https://digitalchild.org.au/parents/" target="_blank">Visit Digital Child</a>
+        </div>
+  
+        <div class="resource-card">
+          <h5>👨‍⚕️ Services Australia</h5>
+          <p>Referral and help to support children's health and wellbeing.</p>
+          <a href="https://www.servicesaustralia.gov.au/child-health-and-safety" target="_blank">Visit Services Australia</a>
+        </div>
+  
+        <div class="resource-card">
+          <h5>📞 Kids Helpline</h5>
+          <p>Support for kids dealing with anxiety, bullying, or other issues.</p>
+          <a href="https://kidshelpline.com.au/" target="_blank">Visit Kids Helpline</a>
+        </div>
+  
+        <div class="resource-card">
+          <h5>👪 Raising Children Network</h5>
+          <p>Videos, articles, and apps covering parenting topics by age group.</p>
+          <a href="https://raisingchildren.net.au/" target="_blank">Visit Raising Children</a>
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='parent.js') }}"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var divElement = document.getElementById('viz1746961361179');
+      if (!divElement) return;
+      var vizElement = divElement.getElementsByTagName('object')[0];
+      vizElement.style.width = '100%';
+      vizElement.style.height = (divElement.offsetWidth * 0.75) + 'px';
+  
+      var scriptElement = document.createElement('script');
+      scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+      vizElement.parentNode.insertBefore(scriptElement, vizElement);
+    });
+  </script>
+  
+{% endblock %}

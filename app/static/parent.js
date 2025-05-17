@@ -14,6 +14,10 @@ function confirmParentInputs() {
     fetchEntries();
 }
 
+function cancelParentPopup() {
+    document.getElementById("parent-popup").remove();
+}
+
 function fetchEntries() {
     const userId = document.getElementById("user-id").value.trim();
     const week = document.getElementById("week-select").value;
@@ -32,16 +36,34 @@ function fetchEntries() {
             }
 
             entries.forEach(entry => {
-                const card = document.createElement("div");
-                card.classList.add("entry-card");
-                card.innerHTML = `
-                    <h4>${entry.activity_name}</h4>
-                    <p>Enjoyment: ${entry.enjoyment}/3</p>
-                    <p>Amount: ${entry.amount}/3</p>
-                    <p>Activeness: ${entry.activeness}/3</p>
-                    <p><small>${entry.timestamp}</small></p>
-                `;
-                container.appendChild(card);
+                const container = document.getElementById("activity-list");
+                container.innerHTML = ""; // Clear previous results
+                
+                if (!entries.length) {
+                    container.innerHTML = "<p>No entries for this week.</p>";
+                    return;
+                }
+                
+                // Create a grid wrapper
+                const grid = document.createElement("div");
+                grid.className = "activity-grid";
+                container.appendChild(grid);
+                
+                entries.forEach(entry => {
+                    const card = document.createElement("div");
+                    card.classList.add("activity-card");
+                
+                    card.innerHTML = `
+                        <div class="activity-name">${entry.activity_name}</div>
+                        <div class="activity-detail">😊 Enjoyment: ${entry.enjoyment}/3</div>
+                        <div class="activity-detail">⏱ Amount: ${entry.amount}/3</div>
+                        <div class="activity-detail">⚡ Activeness: ${entry.activeness}/3</div>
+                        <div class="activity-detail small text-muted">${entry.timestamp}</div>
+                    `;
+                
+                    grid.appendChild(card);
+                });
+                
             });
         })
         .catch(err => {
