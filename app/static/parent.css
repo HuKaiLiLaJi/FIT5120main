@@ -92,3 +92,45 @@ width: 320px;
     margin: 2px 0;
   }
   
+  #supporting-resources .resource-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  #supporting-resources .resource-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    background-color: #fff;
+    border: 1.5px solid #ccc;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    transition: box-shadow 0.2s ease;
+  }
+  
+  #supporting-resources .resource-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  }
+  
+  .resource-icon {
+    font-size: 2rem;
+    line-height: 1;
+  }
+  
+  .resource-title {
+    color: #b17a50;
+    margin: 0 0 5px;
+  }
+  
+  .resource-card a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 500;
+  }
+  
+  .resource-card a:hover {
+    text-decoration: underline;
+  }
+  
