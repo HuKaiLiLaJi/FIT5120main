@@ -491,7 +491,7 @@ def get_activity_entries():
 
     # Calculate the start and end dates
     try:
-        start_date = datetime.strptime(f"{year}-W{week}-1", "%Y-W%W-%w")
+        start_date = datetime.fromisocalendar(year, week, 1)  
         end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
     except ValueError:
         return jsonify({'error': 'Invalid year or week format'}), 400
@@ -534,11 +534,18 @@ def generate_summary():
     # Validate  required parameters 
     if not user_id or not year or not week:
         return jsonify({'error': 'Missing required parameters'}), 400
+    
+    try:
+        year = int(year)
+        week = int(week)
+    except ValueError:
+        return jsonify({'error': 'Year and week must be integers'}), 400
+
 
     # Calculate the start and end dates 
     try:
-        start_date = datetime.strptime(f"{year}-W{int(week)}-1", "%Y-W%W-%w")
-        end_date = start_date + timedelta(days=6)
+        start_date = datetime.fromisocalendar(year, week, 1)  
+        end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
     except ValueError:
         return jsonify({'error': 'Invalid year or week format'}), 400
 
@@ -561,7 +568,7 @@ def generate_summary():
         f"{entry.activity_name} (Enjoyment: {entry.enjoyment}, Time(hour): {entry.amount}, Activeness: {entry.activeness})"
         for entry in entries
     ]
-    prompt = f"Summarize the following activities for user {user_id} during week {week}:\n" + "\n".join(activity_texts)
+    prompt = f"Summarize the following activities and give some recommendation for user {user_id} during week {week}:\n" + "\n".join(activity_texts)
 
     # Call the DeepSeek API to generate the summary
     try:

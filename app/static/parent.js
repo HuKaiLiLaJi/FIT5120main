@@ -104,7 +104,7 @@ function generateSummary() {
     const [year, week] = weekValue.split('-W');
 
     // Backend expects week starting from 0 (adjust as needed)
-    fetch(`/generate-summary?user_id=${userId}&year=${year}&week=${week - 1}`)
+    fetch(`/generate-summary?user_id=${userId}&year=${year}&week=${week}`)
         .then(res => res.json())
         .then(data => {
             const summaryDiv = document.getElementById('summary');
