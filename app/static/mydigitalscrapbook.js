@@ -1,13 +1,26 @@
+// --------------------------------------------
+// CONFIRM USER ID FROM POPUP
+// --------------------------------------------
 function confirmUserId() {
     const input = document.getElementById("popup-user-id").value.trim();
+
+    // Validate input
     if (!input || isNaN(input)) {
         alert("Please enter a valid user ID.");
         return;
     }
+
+    // Set the user ID in the main input and remove the popup
     document.getElementById("user-id").value = input;
     document.getElementById("user-id-popup").remove();
 }
 
+
+// --------------------------------------------
+// DRAG & DROP FUNCTIONALITY
+// --------------------------------------------
+
+// Called when drag starts: stores the activity name and marks element
 function drag(ev) {
     ev.dataTransfer.setData("activity_name", ev.target.textContent.trim());
     ev.target.classList.add("dragging");
@@ -15,25 +28,27 @@ function drag(ev) {
     ev.target.setAttribute("data-original-y", ev.clientY);
 }
 
+// Called when drag ends: removes styles and resets if not dropped
 function dragEnd(ev) {
     ev.target.classList.remove("dragging");
 
-    // Check if dropped into a valid dropzone
     const wasDropped = ev.dataTransfer.dropEffect === "move";
     if (!wasDropped) {
-        // Animate back to original style
         ev.target.classList.add("return-animation");
         setTimeout(() => ev.target.classList.remove("return-animation"), 300);
     }
 }
 
+// Allow drop into a valid container
 function allowDrop(ev) {
     ev.preventDefault();
     ev.currentTarget.classList.add("dragover");
 }
 
+// Called when activity is dropped into dropzone
 function drop(ev) {
     ev.preventDefault();
+
     const userId = document.getElementById("user-id").value.trim();
     if (!userId) {
         alert("Please enter a valid user ID before dropping the activity.");
@@ -42,7 +57,7 @@ function drop(ev) {
 
     const activityName = ev.dataTransfer.getData("activity_name");
 
-    // Create a modal (overlay) prompt
+    // Modal for reflection inputs
     const modal = document.createElement('div');
     modal.classList.add('popup-overlay');
     modal.innerHTML = `
@@ -74,13 +89,16 @@ function drop(ev) {
     `;
     document.body.appendChild(modal);
 
+    // Save button action
     document.getElementById("confirmEntry").onclick = () => {
         const enjoyment = document.getElementById("enjoyment").value;
         const amount = document.getElementById("amount").value;
         const activeness = document.getElementById("activeness").value;
+
+        // Remove modal
         document.body.removeChild(modal);
 
-        // Save to DB
+        // Send data to backend
         fetch("/activity-entries", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -116,40 +134,33 @@ function drop(ev) {
         });
     };
 
+    // Cancel button action
     document.getElementById("cancelEntry").onclick = () => {
         document.body.removeChild(modal);
     };
 }
 
 
+// --------------------------------------------
+// ACTIVITY MANAGEMENT
+// --------------------------------------------
 
-
+// Fetch and display activities from server
 function loadActivities() {
-    // Fetch to the server
     fetch("/activities")
         .then(res => res.json())
         .then(data => {
-            // Get the container 
             const activitiesContainer = document.getElementById("activities");
-            
-            // Clear existing activities
-            activitiesContainer.innerHTML = '';
-            
-            // Create a draggable element 
+            activitiesContainer.innerHTML = ''; // Clear previous
+
             const colorClasses = ['color1', 'color2', 'color3', 'color4', 'color5'];
             data.forEach(activity => {
                 const div = document.createElement("div");
                 div.classList.add("activity", colorClasses[Math.floor(Math.random() * colorClasses.length)]);
                 div.setAttribute("draggable", "true");
-            
-                // ✅ Attach all drag handlers
+                div.textContent = activity.name;
                 div.ondragstart = drag;
                 div.ondragend = dragEnd;
-            
-                // Set the activity name
-                div.textContent = activity.name;
-            
-                // Append to container
                 activitiesContainer.appendChild(div);
             });
         })
@@ -159,25 +170,19 @@ function loadActivities() {
         });
 }
 
-
+// Add a new activity to server
 function addActivity() {
-    //Get the activity name 
     const name = document.getElementById("activity-name").value.trim();
-    
-    // Check  empty
+
     if (name) {
-        //  add the new activity
         fetch("/activities", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name }) // Send the activity name 
+            body: JSON.stringify({ name })
         })
         .then(res => res.json())
         .then(data => {
-            // Show a confirmation message
             alert(data.message);
-            
-            // Reload the activities list 
             loadActivities();
         })
         .catch(err => {
@@ -187,15 +192,12 @@ function addActivity() {
     }
 }
 
+// Delete an activity by ID
 function deleteActivity(id) {
-    // Send a DELETE request 
     fetch(`/activities?id=${id}`, { method: "DELETE" })
         .then(res => res.json())
         .then(data => {
-            // Show a confirmation message
             alert(data.message);
-            
-            // Reload 
             loadActivities();
         })
         .catch(err => {
@@ -205,4 +207,7 @@ function deleteActivity(id) {
 }
 
 
+// --------------------------------------------
+// INITIALIZE WHEN PAGE LOADS
+// --------------------------------------------
 document.addEventListener("DOMContentLoaded", loadActivities);

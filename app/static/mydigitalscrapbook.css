@@ -1,4 +1,6 @@
-/* General Styles */
+/* ----------------------------------------
+   GENERAL LAYOUT & CONTAINER STYLING
+----------------------------------------- */
 body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
@@ -15,26 +17,32 @@ body {
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-  }
-  
+}
 
+/* Responsive flex layout for activities and drop zone */
 .container-flex {
     display: flex;
     flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 20px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
+/* Landscape layout adjustment */
 @media (orientation: landscape) {
     .container-flex {
         flex-direction: row;
-        justify-content: space-between;
     }
     .activities, .dropzone {
         flex: 1;
     }
 }
 
-/* Form Styles */
+/* ----------------------------------------
+   ACTIVITY FORM STYLING
+----------------------------------------- */
 .activity-form {
     display: flex;
     gap: 10px;
@@ -61,54 +69,30 @@ body {
     background-color: #0056b3;
 }
 
+/* ----------------------------------------
+   ACTIVITIES & DROP ZONE GRID STYLING
+----------------------------------------- */
 .activities,
 .dropzone {
-  display: grid;
-  grid-template-columns: repeat(4, 100px); /* 4 columns, fixed width */
-  gap: 12px;
-  padding: 15px;
-  border: 2px dashed #007bff;
-  border-radius: 10px;
-  background-color: #f4f9ff;
-  min-height: 120px;
-  box-sizing: border-box;
-  justify-content: start;
-}
-
-
-
-.container-flex {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 100px); /* 4 equal columns */
+    gap: 12px;
+    padding: 15px;
+    border: 2px dashed #007bff;
+    border-radius: 10px;
+    background-color: #f4f9ff;
+    min-height: 120px;
+    justify-content: start;
     box-sizing: border-box;
-  }
-  
-  
-@media (orientation: landscape) {
-.container-flex {
-    flex-direction: row;
 }
-}
-  
+
+/* Container scroll behavior */
 .zone-box {
     overflow-x: auto;
     max-width: 100%;
 }
-  
-  
-  
-.dropzone .done-activity {
-    background-color: #007bff;
-    color: #ffffff;
-    padding: 10px;
-    margin: 5px 0;
-    border-radius: 5px;
-    cursor: move;
-}
 
+/* Activity block styling */
 .activities .activity {
     width: 100px;
     height: 100px;
@@ -121,32 +105,66 @@ body {
     justify-content: center;
     align-items: center;
     transition: transform 0.2s ease-in-out;
-  }
-  
+}
 
 .activities .activity:hover {
     transform: scale(1.1);
     cursor: grab;
 }
 
+/* Unique colors for each activity */
 .activity.color1 { background-color: #f67280; }
 .activity.color2 { background-color: #6c5ce7; }
 .activity.color3 { background-color: #00b894; }
 .activity.color4 { background-color: #ffeaa7; color: #333; }
 .activity.color5 { background-color: #fd79a8; }
 
+/* Hover override */
 .activities .activity:hover {
     background-color: #0056b3;
 }
 
+/* Completed activity block in dropzone */
 .dropzone .done-activity {
     background-color: #28a745;
+    color: #ffffff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    cursor: move;
 }
 
 .dropzone .done-activity:hover {
     background-color: #218838;
 }
 
+/* ----------------------------------------
+   DRAG & DROP FEEDBACK
+----------------------------------------- */
+.activity.dragging {
+    opacity: 0.5;
+    transform: scale(1.05);
+    transition: transform 0.2s ease-in-out;
+}
+
+.dropzone.dragover {
+    background-color: #e0ffe0;
+    border-style: solid;
+}
+
+/* Return animation when drag cancelled */
+.return-animation {
+    animation: returnPop 0.3s ease;
+}
+
+@keyframes returnPop {
+    0% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* ----------------------------------------
+   MODAL POPUP STYLES
+----------------------------------------- */
 .popup-overlay {
     position: fixed;
     top: 0; left: 0;
@@ -157,7 +175,7 @@ body {
     align-items: center;
     z-index: 9999;
 }
-  
+
 .popup-box {
     background-color: #fff8f0;
     padding: 25px;
@@ -172,34 +190,15 @@ body {
 }
 
 .popup-box label {
-display: block;
-margin-top: 10px;
-font-weight: bold;
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
 }
 
-.popup-box select, .popup-box button {
+.popup-box select,
+.popup-box button {
     width: 100%;
     margin: 5px 0;
     padding: 8px;
     border-radius: 6px;
-}
-
-.activity.dragging {
-opacity: 0.5;
-transform: scale(1.05);
-transition: transform 0.2s ease-in-out;
-}
-  
-.dropzone.dragover {
-background-color: #e0ffe0;
-border-style: solid;
-}
-  
-.return-animation {
-    animation: returnPop 0.3s ease;
-}
-
-@keyframes returnPop {
-    0% { transform: scale(1.1); }
-    100% { transform: scale(1); }
 }
