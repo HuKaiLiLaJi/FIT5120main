@@ -41,12 +41,12 @@ def get_week_dates(base_date=None):
 # Home page
 @app.route('/', methods=['GET', 'POST'])
 def index():
-#    if request.method == 'POST':
-#        if request.form.get('password') == PASSWORD:
-#            return render_template('index.html')  # Load homepage after successful authentication
-#        else:
-#           return render_template('login.html', error='Incorrect password')  # Show error message
-    return render_template('index.html')  # Show login page on first visit
+    if request.method == 'POST':
+        if request.form.get('password') == PASSWORD:
+            return render_template('index.html')  # Load homepage after successful authentication
+        else:
+           return render_template('login.html', error='Incorrect password')  # Show error message
+    return render_template('login.html')  # Show login page on first visit
 
 @app.route('/epic1')
 def epic1():
