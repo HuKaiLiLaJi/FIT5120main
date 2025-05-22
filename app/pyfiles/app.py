@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, jsonify,Blueprint
+from flask import Flask, render_template, request, jsonify,Blueprint, session, redirect, url_for
+import os
 from datetime import datetime, timedelta
 from models import db, Event
 import calendar
@@ -12,11 +13,12 @@ from io import BytesIO
 import requests
 import pymysql
 pymysql.install_as_MySQLdb()
-app = Flask(__name__,template_folder='../templates',static_folder='../static') 
+app = Flask(__name__, template_folder='../templates', static_folder='../static') 
 
 OPTIC_ENDPOINT = "https://api.aiornot.com/v1/detect"
 
 PASSWORD='fit5120ta03'
+app.secret_key = os.environ.get('SECRET_KEY', PASSWORD)
 
 # Create a virtual DB, gonna be replaced to real DB in the future
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://fit5120:fit5120ta03@fit5120.cja0m8k6e2fo.ap-southeast-2.rds.amazonaws.com:3306/fit5120main'
@@ -38,9 +40,34 @@ def get_week_dates(base_date=None):
         base_date = datetime.today()
     start = base_date - timedelta(days=base_date.weekday())
     return [(start + timedelta(days=i)).date() for i in range(7)] # List of 7 dates
+
+@app.before_request
+def require_login():
+    # allow the login page and static assets through
+    if request.endpoint in ('index', None) or request.path.startswith('/static/'):
+        return
+    if not session.get('logged_in'):
+        return redirect(url_for('index'))
+
+
 # Home page
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    # If already logged in, show homepage
+    if session.get('logged_in'):
+        return render_template('index.html')
+
+    # Handle login attempt
+    if request.method == 'POST':
+        if request.form.get('password') == PASSWORD:
+            session['logged_in'] = True
+            return render_template('index.html')
+        else:
+            return render_template('login.html', error='Incorrect password')
+
+    # Not logged in yet, show login form
+    return render_template('login.html')
     if request.method == 'POST':
         if request.form.get('password') == PASSWORD:
             return render_template('index.html')  # Load homepage after successful authentication

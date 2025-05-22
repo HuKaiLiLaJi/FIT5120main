@@ -103,15 +103,18 @@ function generateSummary() {
 
     const [year, week] = weekValue.split('-W');
 
-    // Backend expects week starting from 0 (adjust as needed)
     fetch(`/generate-summary?user_id=${userId}&year=${year}&week=${week}`)
         .then(res => res.json())
         .then(data => {
-            const summaryDiv = document.getElementById('summary');
-            summaryDiv.innerHTML = `<p>${data.summary}</p>`;
+        const summaryDiv = document.getElementById('summary');
+        summaryDiv.innerHTML = `
+            <div class="alert alert-info">
+            <h5 class="mb-2">Weekly Summary</h5>
+            ${marked.parse(data.summary)}
+            </div>`;
         })
         .catch(err => {
-            console.error(err);
-            alert('Error generating summary. Please try again.');
+    console.error(err);
+        alert('Error generating summary. Please try again.');
         });
 }
