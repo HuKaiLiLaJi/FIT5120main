@@ -120,7 +120,7 @@ def get_recommendation():
         model='deepseek-chat',
         messages=[
             {"role": "system", "content": "You are Children digital life specialist"},
-            {"role": "user", "content": 'Talk about how doing the following activity helps balance childrends digital life, if the following is not an activity but an area of interest suggest online/outdoor activites that are related to that activity'+input_text},
+            {"role": "user", "content": 'Concisely talk about how doing the following activity helps balance childrends digital life, if the following is not an activity but an area of interest suggest online/outdoor activites that are related to that activity'+input_text},
         ],
         stream=False # single complete response, not streamed
     )
@@ -153,6 +153,31 @@ def get_events_by_day():
     
     return jsonify(events_json)
     
+@app.route('/edit/<int:event_id>', methods=['PUT'])
+def edit_event(event_id):
+    data = request.get_json()
+    event = Event.query.get(event_id)
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404
+
+    event.date = datetime.strptime(data['date'], '%Y-%m-%d').date()
+    event.title = data['title']
+    event.description = data.get('description', '')
+    event.start_time = datetime.strptime(data['start_time'], '%H:%M').time()
+    event.end_time = datetime.strptime(data['end_time'], '%H:%M').time()
+
+    db.session.commit()
+    return jsonify({'status': 'updated'})
+
+@app.route('/delete/<int:event_id>', methods=['DELETE'])
+def delete_event_by_id(event_id):
+    event = Event.query.get(event_id)
+    if not event:
+        return jsonify({'error': 'Event not found'}), 404
+
+    db.session.delete(event)
+    db.session.commit()
+    return jsonify({'status': 'deleted'})
 
 @app.route('/analyze-with-deepseek', methods=['POST'])
 def analyze_with_deepseek():
@@ -185,7 +210,7 @@ def analyze_with_deepseek():
             },
             {
                 "role": "user", 
-                "content": f"""Please analyse if the activities on day {day} is optimal：
+                "content": f"""Please analyse and give concise feedbacks on if the activities on day {day} is optimal：
                 {json.dumps(events_data, indent=2, ensure_ascii=False)}
                 
                 Requirements：
@@ -219,7 +244,7 @@ def get_age_recommendation():
             },
             {
                 'role':'user',
-                'content':f"""Please give suggestions for children aged:{age} everyday screentime"""
+                'content':f"""Very concisely but scientifically and evidently, give suggestions for children aged:{age} everyday screentime"""
             }
         ],
         stream=False
@@ -595,14 +620,14 @@ def generate_summary():
         f"{entry.activity_name} (Enjoyment: {entry.enjoyment}, Time(hour): {entry.amount}, Activeness: {entry.activeness})"
         for entry in entries
     ]
-    prompt = f"Summarize the following activities and give some recommendation for user {user_id} during week {week}:\n" + "\n".join(activity_texts)
+    prompt = f"Summarize, in keypoints and concisely, the following activities and give some recommendation for child {user_id} during week {week}:\n" + "\n".join(activity_texts)
 
     # Call the DeepSeek API to generate the summary
     try:
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant, helping parents analyze child's behavior"},
+                {"role": "system", "content": "You are a children digital habit specialist, helping parents analyze their child's digital habit"},
                 {"role": "user", "content": prompt},
             ],
             stream=False
