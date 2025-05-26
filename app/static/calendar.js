@@ -134,25 +134,6 @@ function editEvent(id, date, title, description, startTime, endTime) {
   modal.show();
 }
 
-document.getElementById('eventForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
-  const formData = new FormData(this);
-  const data = Object.fromEntries(formData.entries());
-  const editId = this.getAttribute('data-edit-id');
-  const url = editId ? `/edit/${editId}` : '/add';
-  const method = editId ? 'PUT' : 'POST';
-
-  const res = await fetch(url, {
-    method: method,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
-
-  if (res.ok) {
-    window.location.reload();
-  }
-});
-
 function deleteSingleEvent(id) {
   if (!confirm('Delete this event?')) return;
 
