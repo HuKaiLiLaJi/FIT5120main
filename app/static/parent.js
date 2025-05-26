@@ -2,6 +2,29 @@
 // HANDLE MODAL POPUP CONFIRMATION & CANCEL
 // ---------------------------------------------------
 
+function deleteActivityEntry(entryId) {
+  fetch(`/delete-entry?id=${entryId}`, {
+    method: 'DELETE'
+  })
+  .then(async (res) => {
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message || 'Entry deleted successfully');
+      location.reload(); // ← Force full refresh to reflect changes
+    } else {
+      throw new Error(data.error || 'Unexpected error');
+    }
+  })
+  .catch(err => {
+    console.error('Delete error:', err);
+    alert('Failed to delete entry: ' + err.message);
+  });
+}
+
+
+
+
 function confirmParentInputs() {
     const userId = document.getElementById("popup-user-id").value.trim();
   
@@ -56,12 +79,17 @@ function confirmParentInputs() {
   
           card.innerHTML = `
             <div class="activity-name">${entry.activity_name}</div>
+            <span class="delete-icon" title="Delete">❌</span>
             <div class="activity-detail">😊 Enjoyment: ${entry.enjoyment}/3</div>
             <div class="activity-detail">⏱ Amount: ${entry.amount}/3</div>
             <div class="activity-detail">⚡ Activeness: ${entry.activeness}/3</div>
             <div class="activity-detail small text-muted">${entry.timestamp}</div>
           `;
-  
+          card.querySelector('.delete-icon').addEventListener('click', () => {
+            if (confirm(`Delete entry: "${entry.activity_name}" from ${entry.timestamp}?`)) {
+              deleteActivityEntry(entry.id);
+            }
+          });          
           grid.appendChild(card);
         });
   

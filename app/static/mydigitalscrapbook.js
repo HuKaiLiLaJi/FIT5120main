@@ -22,7 +22,8 @@ function confirmUserId() {
 
 // Called when drag starts: stores the activity name and marks element
 function drag(ev) {
-    ev.dataTransfer.setData("activity_name", ev.target.textContent.trim());
+    const nameOnly = ev.target.querySelector('.activity-name')?.textContent.trim() || '';
+    ev.dataTransfer.setData("activity_name", nameOnly);
     ev.target.classList.add("dragging");
     ev.target.setAttribute("data-original-x", ev.clientX);
     ev.target.setAttribute("data-original-y", ev.clientY);
@@ -75,7 +76,7 @@ function drop(ev) {
                 <option value="2">😐 Kind of</option>
                 <option value="3">😊 Yes</option>
             </select>
-            <label>Was it active or passive?</label>
+            <label>Was it engaging?</label>
             <select id="activeness">
                 <option value="1">😴 Passive</option>
                 <option value="2">🧠 Used my brain</option>
@@ -158,10 +159,20 @@ function loadActivities() {
                 const div = document.createElement("div");
                 div.classList.add("activity", colorClasses[Math.floor(Math.random() * colorClasses.length)]);
                 div.setAttribute("draggable", "true");
-                div.textContent = activity.name;
+                div.innerHTML = `
+                <span class="activity-name">${activity.name}</span>
+                <span class="delete-icon" title="Remove">❌</span>
+              `;
                 div.ondragstart = drag;
                 div.ondragend = dragEnd;
                 activitiesContainer.appendChild(div);
+                div.querySelector('.delete-icon').addEventListener('click', (e) => {
+                    e.stopPropagation(); // Prevent drag conflict
+                    if (confirm(`Delete "${activity.name}"?`)) {
+                      deleteActivity(activity.id);
+                    }
+                  });
+                  
             });
         })
         .catch(err => {

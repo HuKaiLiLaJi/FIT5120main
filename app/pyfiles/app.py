@@ -561,6 +561,7 @@ def get_activity_entries():
     # Format the results 
     results = [
         {
+            'id': entry.id,
             'activity_name': entry.activity_name,
             'enjoyment': entry.enjoyment,
             'amount': entry.amount,
@@ -570,8 +571,26 @@ def get_activity_entries():
         for entry in entries
     ]
 
+
     # Return the results 
     return jsonify(results), 200
+
+@app.route('/delete-entry', methods=['DELETE'])
+def delete_activity_entry():
+    entry_id = request.args.get('id')
+
+    if not entry_id:
+        return jsonify({'error': 'Missing entry ID'}), 400
+
+    entry = ActivityEntry.query.get(entry_id)
+
+    if not entry:
+        return jsonify({'error': 'Entry not found'}), 404
+
+    db.session.delete(entry)
+    db.session.commit()
+
+    return jsonify({'message': 'Entry deleted successfully'})
 
 
 
