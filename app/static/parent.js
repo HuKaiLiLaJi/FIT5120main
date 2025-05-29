@@ -2,6 +2,29 @@
 // HANDLE MODAL POPUP CONFIRMATION & CANCEL
 // ---------------------------------------------------
 
+function deleteActivityEntry(entryId) {
+  fetch(`/delete-entry?id=${entryId}`, {
+    method: 'DELETE'
+  })
+  .then(async (res) => {
+    const data = await res.json();
+
+    if (res.ok) {
+      alert(data.message || 'Entry deleted successfully');
+      location.reload(); // ← Force full refresh to reflect changes
+    } else {
+      throw new Error(data.error || 'Unexpected error');
+    }
+  })
+  .catch(err => {
+    console.error('Delete error:', err);
+    alert('Failed to delete entry: ' + err.message);
+  });
+}
+
+
+
+
 function confirmParentInputs() {
     const userId = document.getElementById("popup-user-id").value.trim();
   
@@ -23,6 +46,10 @@ function confirmParentInputs() {
   
     // Hide the modal popup
     document.getElementById("parent-popup").style.display = "none";
+  
+    // Update hidden fields
+    document.getElementById("user-id").value = userId;
+    document.getElementById("week-select").value = weekValue;
   
     // Parse year and week
     const [year, week] = weekValue.split("-W");
@@ -52,12 +79,17 @@ function confirmParentInputs() {
   
           card.innerHTML = `
             <div class="activity-name">${entry.activity_name}</div>
+            <span class="delete-icon" title="Delete">❌</span>
             <div class="activity-detail">😊 Enjoyment: ${entry.enjoyment}/3</div>
             <div class="activity-detail">⏱ Amount: ${entry.amount}/3</div>
             <div class="activity-detail">⚡ Activeness: ${entry.activeness}/3</div>
             <div class="activity-detail small text-muted">${entry.timestamp}</div>
           `;
-  
+          card.querySelector('.delete-icon').addEventListener('click', () => {
+            if (confirm(`Delete entry: "${entry.activity_name}" from ${entry.timestamp}?`)) {
+              deleteActivityEntry(entry.id);
+            }
+          });          
           grid.appendChild(card);
         });
   
@@ -67,28 +99,50 @@ function confirmParentInputs() {
         console.error(err);
         document.getElementById("activity-list").innerHTML = "<p class='text-danger'>Error loading activities.</p>";
       });
+  }
   
-    // 2) Fetch and render AI-generated summary
+  // ---------------------------------------------------
+  // MANUAL SUMMARY BUTTON HANDLER (ONLY BY CLICK)
+  // ---------------------------------------------------
+  
+  function generateSummary() {
+    const userId = document.getElementById("user-id").value.trim();
+    const weekValue = document.getElementById("week-select").value;
+  
+    if (!userId || !weekValue) {
+      alert("Please enter a valid User ID and select a week.");
+      return;
+    }
+  
+    const [year, week] = weekValue.split("-W");
+    const summaryBox = document.getElementById("summary");
+    summaryBox.innerHTML = '<div class="alert alert-secondary"><em>⏳ Generating summary...</em></div>';
+  
     fetch(`/generate-summary?user_id=${encodeURIComponent(userId)}&year=${encodeURIComponent(year)}&week=${encodeURIComponent(week)}`)
       .then(res => {
         if (!res.ok) throw new Error("Summary generation failed");
         return res.json();
       })
       .then(data => {
-        document.getElementById("summary").innerHTML = `<div class="alert alert-light">${data.summary}</div>`;
+        const markdown = data.summary || "No summary available.";
+        summaryBox.innerHTML = `
+          <div class="alert alert-info">
+            <h5>Weekly Summary</h5>
+            ${marked.parse(markdown)}
+          </div>
+        `;
       })
       .catch(err => {
         console.error(err);
-        document.getElementById("summary").innerHTML = "<p class='text-danger'>Error generating summary.</p>";
+        summaryBox.innerHTML = "<div class='alert alert-danger'>❌ Error generating summary.</div>";
       });
   }
   
-  // Optional cancel function if you have a cancel button
+  // ---------------------------------------------------
+  // OPTIONAL CANCEL BUTTON
+  // ---------------------------------------------------
+  
   function cancelParentInputs() {
     document.getElementById("parent-popup").style.display = "none";
   }
-  
-  // ---------------------------------------------------
-  // EXISTING FUNCTIONS (keep any others you need below)
-  // ---------------------------------------------------
   

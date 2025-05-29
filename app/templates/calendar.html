@@ -26,7 +26,7 @@
         <strong>Interest Suggestions:</strong> Use the top section to type in an area of interest or an activity. Click "See suggestions" to get relevant ideas (allow up to 30 seconds for a response).
       </li>
       <li>
-        <strong>Viewing Your Schedule:</strong> Your weekly calendar below displays each day’s scheduled events. Click "add something" on any day to open the modal and add a new event.
+        <strong>Viewing Your Schedule:</strong> Your weekly calendar below displays each day’s scheduled events. Click "Add and Event" on any day to open the modal and add a new event.
       </li>
       <li>
         <strong>Analysis & Feedback:</strong> Use the dropdown and "Get feedback" button to select a day and receive GPT-powered suggestions for balancing that day’s activities.
@@ -56,13 +56,22 @@
         <p>{{ day }}</p>
         <ul>
           {% for event in events_by_day[day] %}
-            <li>
+            <li data-id="{{ event.id }}">
               <strong>{{ event.start_time.strftime('%H:%M') }} - {{ event.end_time.strftime('%H:%M') }}</strong><br>
               {{ event.title }}<br>
               {{ event.description }}
+              <div class="mt-1">
+                <button class="text-primary border-0 bg-transparent p-0 me-2" onclick="editEvent({{ event.id }}, '{{ event.date }}', '{{ event.title }}', '{{ event.description }}', '{{ event.start_time.strftime('%H:%M') }}', '{{ event.end_time.strftime('%H:%M') }}')">
+                  ✏️ Edit
+                </button>
+                <button class="text-danger border-0 bg-transparent p-0" onclick="deleteSingleEvent({{ event.id }})">
+                  🗑️ Delete
+                </button>
+              </div>
+              
             </li>
           {% endfor %}
-        </ul>
+        </ul>        
         <button class="btn btn-sm btn-primary" onclick="openAddModal('{{ day }}')">add something</button>
       </div>
     {% endfor %}

@@ -161,3 +161,28 @@
 .resource-card a:hover {
   text-decoration: underline;
 }
+
+.activity-card {
+  position: relative;
+}
+
+.activity-card .delete-icon {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.activity-card .delete-icon:hover {
+  transform: scale(1.5);
+}

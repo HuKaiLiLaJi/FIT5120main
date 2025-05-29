@@ -23,20 +23,26 @@ body {
 .container-flex {
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 20px;
     width: 100%;
     box-sizing: border-box;
+    padding-bottom: 20px;
+
 }
 
 /* Landscape layout adjustment */
 @media (orientation: landscape) {
     .container-flex {
         flex-direction: row;
+        justify-content: space-around;
+        align-items: flex-start;
     }
-    .activities, .dropzone {
+    .activities, .dropzone, .zone-box {
         flex: 1;
+        max-width: 100%;
     }
 }
 
@@ -46,11 +52,17 @@ body {
 .activity-form {
     display: flex;
     gap: 10px;
-    margin-bottom: 20px;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    max-width: 90vw; /* Responsive to screen size */
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
+
 .activity-form input {
-    flex: 1;
+    flex: 2;
+    min-width: 200px;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #ddd;
@@ -63,6 +75,8 @@ body {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    flex: 1;
+    min-width: 100px;
 }
 
 .activity-form button:hover {
@@ -75,28 +89,35 @@ body {
 .activities,
 .dropzone {
     display: grid;
-    grid-template-columns: repeat(4, 100px); /* 4 equal columns */
-    gap: 12px;
-    padding: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 16px;
+    padding: 20px;
     border: 2px dashed #007bff;
     border-radius: 10px;
     background-color: #f4f9ff;
     min-height: 120px;
-    justify-content: start;
+    justify-items: center;
+    width: 100%;
     box-sizing: border-box;
 }
 
 /* Container scroll behavior */
 .zone-box {
-    overflow-x: auto;
-    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
 }
+
 
 /* Activity block styling */
 .activities .activity {
     width: 100px;
+    max-width: 100px;
     height: 100px;
     border-radius: 16px;
+    position: relative;
+    padding-top: 10px; /* room for icon */
     font-size: 1.1rem;
     font-weight: bold;
     text-align: center;
@@ -107,9 +128,36 @@ body {
     transition: transform 0.2s ease-in-out;
 }
 
+.activity .activity-name {
+    display: block;
+    padding: 5px;
+}
+
 .activities .activity:hover {
     transform: scale(1.1);
     cursor: grab;
+}
+
+.activity .delete-icon {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    color: #fff;
+    /* background-color: #d9534f; */
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.activity .delete-icon:hover {
+    transform: scale(1.5);
 }
 
 /* Unique colors for each activity */

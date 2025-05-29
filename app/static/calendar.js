@@ -120,6 +120,36 @@ function deleteEventsForDate(button) {
 }
 
 
+function editEvent(id, date, title, description, startTime, endTime) {
+  document.getElementById('eventDate').value = date;
+  document.querySelector('#eventForm input[name="title"]').value = title;
+  document.querySelector('#eventForm textarea[name="description"]').value = description;
+  document.querySelector('#eventForm input[name="start_time"]').value = startTime;
+  document.querySelector('#eventForm input[name="end_time"]').value = endTime;
+
+  // Store event ID in a hidden field
+  document.getElementById('eventForm').setAttribute('data-edit-id', id);
+
+  const modal = new bootstrap.Modal(document.getElementById('eventModal'));
+  modal.show();
+}
+
+function deleteSingleEvent(id) {
+  if (!confirm('Delete this event?')) return;
+
+  fetch(`/delete/${id}`, {
+    method: 'DELETE'
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === 'deleted') {
+      alert('Event deleted');
+      location.reload();
+    } else {
+      alert('Delete failed');
+    }
+  });
+}
 
 
 
